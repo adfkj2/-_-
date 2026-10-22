@@ -1,0 +1,70 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName Microsoft YaHei
+skinparam defaultFontSize 15
+skinparam dpi 180
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam ArrowColor #35536C
+skinparam classBackgroundColor #F3F6FA
+skinparam usecaseBackgroundColor #F3F6FA
+skinparam stateBackgroundColor #F3F6FA
+skinparam sequenceParticipantBackgroundColor #F3F6FA
+skinparam componentBackgroundColor #F3F6FA
+skinparam objectBackgroundColor #F3F6FA
+skinparam packageBackgroundColor white
+skinparam nodeBackgroundColor #F3F6FA
+skinparam databaseBackgroundColor #F3F6FA
+hide empty members
+left to right direction
+package "身份与权限" {
+class User {
+  - userId : String
+  - username : String
+  - passwordHash : String
+  - accountStatus : String
+  + login() : boolean
+  + changePassword() : boolean
+  # verifyCredential() : boolean
+}
+class Role {
+  - roleId : String
+  - roleCode : String
+  + assignPermission() : void
+}
+class Application {
+  - clientId : String
+  - redirectUri : String
+  - enabled : boolean
+  + isAvailable() : boolean
+}
+}
+package "会话与审计" {
+class AuthSession {
+  - sessionId : String
+  - lastActiveAt : DateTime
+  - sessionStatus : String
+  + refresh() : void
+  + revoke() : void
+}
+class Authorization {
+  - authId : String
+  - expiresAt : DateTime
+  + isValid() : boolean
+}
+class AuditEvent {
+  - eventId : String
+  - eventType : String
+  - occurredAt : DateTime
+  + record() : void
+}
+}
+User "0..*" -- "0..*" Role : 拥有
+Role "0..*" -- "0..*" Application : 可访问
+User "1" -- "0..*" AuthSession : 建立
+AuthSession "1" -- "0..*" Authorization : 产生
+Application "1" -- "0..*" Authorization : 授予
+User "0..1" -- "0..*" AuditEvent : 操作者
+
+@enduml

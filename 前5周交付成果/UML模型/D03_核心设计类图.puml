@@ -1,0 +1,56 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName Microsoft YaHei
+skinparam defaultFontSize 15
+skinparam dpi 180
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam ArrowColor #456278
+skinparam classBackgroundColor #F3F6FA
+skinparam componentBackgroundColor #F3F6FA
+skinparam packageBackgroundColor white
+hide empty members
+top to bottom direction
+class LoginHandler {
+authenticate(command)
+}
+class AccountService {
+verifyPassword()
+recordFailure()
+changePassword()
+}
+class SessionService {
+create(user, policy)
+validateAndTouch(sid)
+revoke(sid, reason)
+}
+class AccessPolicyService {
+check(userId, clientId)
+}
+class AuthorizationServiceAdapter {
+saveWithSession()
+consumeCode()
+introspect()
+}
+class AuditService {
+appendOnce(eventKey)
+query(filters)
+}
+class UserRepository
+class SessionRepository
+class AuthorizationLinkRepository
+class PolicyService {
+getSnapshot()
+update(expectedVersion)
+}
+LoginHandler --> AccountService
+LoginHandler --> SessionService
+AccountService --> UserRepository
+AccountService --> AuditService
+SessionService --> SessionRepository
+SessionService --> PolicyService
+AuthorizationServiceAdapter --> SessionService
+AuthorizationServiceAdapter --> AccessPolicyService
+AuthorizationServiceAdapter --> AuthorizationLinkRepository
+AuthorizationServiceAdapter --> AuditService
+@enduml

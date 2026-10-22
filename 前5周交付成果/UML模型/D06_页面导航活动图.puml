@@ -1,0 +1,38 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName Microsoft YaHei
+skinparam defaultFontSize 15
+skinparam dpi 180
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam ArrowColor #456278
+skinparam classBackgroundColor #F3F6FA
+skinparam componentBackgroundColor #F3F6FA
+skinparam packageBackgroundColor white
+hide empty members
+start
+:应用首页;
+if (当前访问获准?) then (是)
+:显示业务页面与用户姓名;
+else (否)
+:跳转中心登录;
+if (账号需要首次改密?) then (是)
+:进入强制改密页;
+:改密后重新登录;
+endif
+:校验应用权限;
+:返回获准应用;
+endif
+if (用户选择个人中心?) then (是)
+:查看资料或本人会话;
+:修改资料或撤销指定会话;
+else (否)
+if (用户选择管理台且有 ADMIN?) then (是)
+:用户 角色 应用 审计 策略管理;
+else (否)
+:继续使用业务应用;
+endif
+endif
+:局部退出或进入中心统一退出确认;
+stop
+@enduml

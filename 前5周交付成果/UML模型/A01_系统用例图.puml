@@ -1,0 +1,35 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName Microsoft YaHei
+skinparam defaultFontSize 15
+skinparam dpi 180
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam ArrowColor #35536C
+skinparam classBackgroundColor #F3F6FA
+skinparam usecaseBackgroundColor #F3F6FA
+skinparam stateBackgroundColor #F3F6FA
+skinparam sequenceParticipantBackgroundColor #F3F6FA
+hide empty members
+left to right direction
+actor 普通用户 as U
+actor 业务系统 as B
+rectangle 登录与会话 {
+usecase "UC01 集中账号登录" as C1
+usecase "UC02 跨系统单点登录" as C2
+usecase "UC03 受保护资源访问" as C3
+usecase "UC04 退出登录" as C4
+usecase "UC05 会话有效期处理" as C5
+usecase "UC06 本人会话管理" as C6
+}
+U --> C1
+U --> C2
+U --> C3
+U --> C4
+U --> C6
+B --> C2
+B --> C3
+C3 ..> C5 : <<include>>
+
+@enduml

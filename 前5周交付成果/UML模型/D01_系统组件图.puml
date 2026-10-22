@@ -1,0 +1,36 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName Microsoft YaHei
+skinparam defaultFontSize 15
+skinparam dpi 180
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam ArrowColor #456278
+skinparam classBackgroundColor #F3F6FA
+skinparam componentBackgroundColor #F3F6FA
+skinparam packageBackgroundColor white
+hide empty members
+top to bottom direction
+actor 浏览器 as B
+package "应用 A 与 B 分别部署" {
+component "业务页面与接口" as APP
+component "OIDC 客户端与访问过滤器" as CLIENT
+APP --> CLIENT
+}
+package "统一认证中心" {
+component "标准协议端点" as OIDC
+component "AUTH / SESSION" as AS
+component "USER / ACCESS" as UA
+component "APP / POLICY / AUDIT" as AP
+OIDC --> AS
+AS --> UA
+AS --> AP
+}
+database MySQL as DB
+B --> APP : HTTPS
+B --> OIDC : 浏览器跳转
+CLIENT --> OIDC : 换码与逐请求内省
+AS --> DB
+UA --> DB
+AP --> DB
+@enduml

@@ -1,0 +1,27 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName Microsoft YaHei
+skinparam defaultFontSize 15
+skinparam dpi 180
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam ArrowColor #35536C
+skinparam classBackgroundColor #F3F6FA
+skinparam usecaseBackgroundColor #F3F6FA
+skinparam stateBackgroundColor #F3F6FA
+skinparam sequenceParticipantBackgroundColor #F3F6FA
+hide empty members
+left to right direction
+[*] --> ACTIVE : 认证成功 建立新会话
+ACTIVE --> ACTIVE : 有效访问 更新活动时间
+ACTIVE --> EXPIRED : 空闲或绝对时限到期
+ACTIVE --> REVOKED : 退出 撤销 改密 停用
+EXPIRED --> [*]
+REVOKED --> [*]
+note bottom of ACTIVE
+只刷新活动时间
+不延长绝对截止时间
+end note
+
+@enduml

@@ -1,0 +1,31 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName Microsoft YaHei
+skinparam defaultFontSize 15
+skinparam dpi 180
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam ArrowColor #35536C
+skinparam classBackgroundColor #F3F6FA
+skinparam usecaseBackgroundColor #F3F6FA
+skinparam stateBackgroundColor #F3F6FA
+skinparam sequenceParticipantBackgroundColor #F3F6FA
+skinparam componentBackgroundColor #F3F6FA
+skinparam objectBackgroundColor #F3F6FA
+skinparam packageBackgroundColor white
+skinparam nodeBackgroundColor #F3F6FA
+skinparam databaseBackgroundColor #F3F6FA
+hide empty members
+top to bottom direction
+node "用户终端\n浏览器" as U
+node "认证服务器\n认证中心应用" as C
+node "应用服务器\n业务系统A与B" as A
+database "数据库服务器\nMySQL" as DB
+U --> C : HTTPS 登录与授权
+U --> A : HTTPS 业务访问
+A --> C : 内网认证与内省
+C --> DB : JDBC
+A --> DB : JDBC
+
+@enduml

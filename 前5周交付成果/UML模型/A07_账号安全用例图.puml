@@ -1,0 +1,38 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName Microsoft YaHei
+skinparam defaultFontSize 15
+skinparam dpi 180
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam ArrowColor #35536C
+skinparam classBackgroundColor #F3F6FA
+skinparam usecaseBackgroundColor #F3F6FA
+skinparam stateBackgroundColor #F3F6FA
+skinparam sequenceParticipantBackgroundColor #F3F6FA
+hide empty members
+left to right direction
+actor 申请者 as V
+actor 普通用户 as U
+actor 管理员 as M
+M --|> U
+rectangle 账号与安全 {
+usecase "UC07 管理账号" as C7
+usecase "UC08 注册与审核" as C8
+usecase "UC09 维护个人资料" as C9
+usecase "UC10 修改或重置密码" as C10
+usecase "UC11 登录限制与解锁" as C11
+usecase "UC12 角色管理与分配" as C12
+}
+V --> C8
+M --> C7
+M --> C8
+U --> C9
+U --> C10
+M --> C10
+U --> C11
+M --> C11
+M --> C12
+
+@enduml

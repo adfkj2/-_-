@@ -1,0 +1,42 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName Microsoft YaHei
+skinparam defaultFontSize 15
+skinparam dpi 180
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam ArrowColor #456278
+skinparam classBackgroundColor #F3F6FA
+skinparam componentBackgroundColor #F3F6FA
+skinparam packageBackgroundColor white
+hide empty members
+actor 浏览器 as B
+participant "业务应用 A 或 B" as A
+participant "认证中心" as C
+database MySQL as D
+B -> A : 访问受保护页面
+A -> A : 保存 state、nonce、PKCE verifier
+A --> B : 重定向至授权端点
+B -> C : code 请求与 challenge S256
+C -> D : 检查中心会话、账号、应用与权限
+alt 无有效中心会话
+C --> B : 显示登录表单
+B -> C : 凭据与 CSRF 令牌
+C -> D : 核验凭据并建立 sid
+else 已有有效会话
+C -> C : 复用身份，无需再次输入密码
+end
+C -> D : 保存一次性授权码与 sid 关联
+C --> B : 精确回调地址，附 code 与 state
+B -> A : 进入回调
+A -> A : 校验 state
+A -> C : 后端换码，客户端凭据与 verifier
+C -> D : 原子消费 code 并复查当前状态
+C --> A : ID Token 与 opaque access token
+A -> A : 校验签名、iss、aud、exp、nonce
+A -> C : 内省 access token
+C -> D : 检查会话时限及当前权限
+C --> A : active、sub、client_id、exp
+A -> A : 轮换应用会话标识
+A --> B : 返回业务页面
+@enduml

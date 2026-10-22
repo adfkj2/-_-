@@ -1,0 +1,40 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName Microsoft YaHei
+skinparam defaultFontSize 15
+skinparam dpi 180
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam ArrowColor #456278
+skinparam classBackgroundColor #F3F6FA
+skinparam componentBackgroundColor #F3F6FA
+skinparam packageBackgroundColor white
+hide empty members
+top to bottom direction
+class "sys_user\n用户" as U
+class "sys_role\n角色" as R
+class "user_role\n用户角色关联" as UR
+class "role_application\n角色应用授权" as RA
+class "app_profile\n应用扩展信息" as P
+class "oauth2_registered_client\n协议客户端" as C
+class "auth_session\n中心会话" as S
+class "authorization_session_link\n授权会话关联" as L
+class "oauth2_authorization\n框架授权" as A
+class "audit_event\n审计事件" as E
+class "security_event\n异常事件" as X
+U "1" -- "0..*" UR
+R "1" -- "0..*" UR
+R "1" -- "0..*" RA
+P "1" -- "0..*" RA
+C "1" -- "1" P
+U "1" -- "0..*" S
+S "1" -- "0..*" L
+A "1" -- "0..1" L
+C "1" -- "0..*" A
+U "0..1" -- "0..*" E
+E "1" -- "0..1" X
+note bottom of A
+框架表与自定义表分开维护
+会话关联由扩展服务保证一致性
+end note
+@enduml

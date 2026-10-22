@@ -1,0 +1,35 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName Microsoft YaHei
+skinparam defaultFontSize 15
+skinparam dpi 180
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam ArrowColor #35536C
+skinparam classBackgroundColor #F3F6FA
+skinparam usecaseBackgroundColor #F3F6FA
+skinparam stateBackgroundColor #F3F6FA
+skinparam sequenceParticipantBackgroundColor #F3F6FA
+skinparam componentBackgroundColor #F3F6FA
+skinparam objectBackgroundColor #F3F6FA
+skinparam packageBackgroundColor white
+skinparam nodeBackgroundColor #F3F6FA
+skinparam databaseBackgroundColor #F3F6FA
+hide empty members
+top to bottom direction
+[*] --> 未认证
+未认证 --> 认证中 : 提交账号与密码
+认证中 --> 未认证 : 凭据或账号状态无效
+认证中 --> 有效 : 校验通过 建立会话
+有效 --> 有效 : 有效访问 / 刷新活动时间
+有效 --> 已过期 : 空闲超时或绝对时限到期
+有效 --> 已撤销 : 主动退出 / 修改密码 / 账号停用
+已过期 --> [*]
+已撤销 --> [*]
+note right of 有效
+只刷新活动时间
+不延长绝对截止时间
+end note
+
+@enduml

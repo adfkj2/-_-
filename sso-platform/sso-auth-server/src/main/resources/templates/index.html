@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>认证中心</title>
+  <style>
+    body { font-family: system-ui, "Microsoft YaHei", sans-serif; margin: 0; background: #f5f6f8; }
+    main { max-width: 720px; margin: 56px auto; background: #fff; padding: 28px 32px; border-radius: 8px;
+           box-shadow: 0 2px 12px rgba(0, 0, 0, .08); }
+    h1 { font-size: 20px; margin: 0 0 8px; }
+    p { color: #444; font-size: 14px; }
+    code { background: #f1f3f5; padding: 2px 5px; border-radius: 3px; }
+    form { margin-top: 20px; }
+    button { padding: 8px 16px; border: 0; border-radius: 4px; background: #b3261e; color: #fff;
+             font-size: 14px; cursor: pointer; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>认证中心</h1>
+  <p>当前登录用户：<strong th:text="${username}">alice01</strong></p>
+  <p>本人会话列表：<code>GET /api/me/sessions</code>　结束指定会话：<code>DELETE /api/me/sessions/{sid}</code></p>
+  <form method="post" th:action="@{/logout}">
+    <button type="submit">统一退出（撤销本浏览器会话）</button>
+  </form>
+</main>
+</body>
+</html>

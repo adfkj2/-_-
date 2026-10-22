@@ -1,0 +1,38 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName Microsoft YaHei
+skinparam defaultFontSize 15
+skinparam dpi 180
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam ArrowColor #35536C
+skinparam classBackgroundColor #F3F6FA
+skinparam usecaseBackgroundColor #F3F6FA
+skinparam stateBackgroundColor #F3F6FA
+skinparam sequenceParticipantBackgroundColor #F3F6FA
+skinparam componentBackgroundColor #F3F6FA
+skinparam objectBackgroundColor #F3F6FA
+skinparam packageBackgroundColor white
+skinparam nodeBackgroundColor #F3F6FA
+skinparam databaseBackgroundColor #F3F6FA
+hide empty members
+object "用户 : 浏览器" as U
+object "业务系统A" as A
+object "业务系统B" as B
+object "认证中心" as C
+object "会话存储" as S
+U -- A : 1: 访问A受保护页面
+A -- C : 2: 请求确认身份
+C -- U : 3: 返回统一登录入口
+U -- C : 4: 提交账号与密码
+C -- S : 5: 建立并保存中心会话
+C -- A : 6: 返回认证结果
+A -- U : 7: 返回A页面
+U -- B : 8: 访问B受保护页面
+B -- C : 9: 请求确认身份
+C -- S : 10: 校验B访问权限
+C -- B : 11: 返回B专用认证结果
+B -- U : 12: 返回B页面 无须再输密码
+
+@enduml

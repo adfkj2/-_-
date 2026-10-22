@@ -1,0 +1,30 @@
+# 构建产物
+target/
+*.class
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# 本机构建工具与验证脚本（含第三方 jar 与暂存目录）
+.work/
+node_modules/
+
+# 归档压缩包（内容与目录重复）
+*.zip
+
+# 教师课件（第三方材料，不随仓库分发）
+SE-课程设计要求-2026.pptx
+
+# 含成员联系方式的提交表
+李鹏_汪泽洋_文泰龙_课程设计.docx
+
+# 内部沟通草稿
+沟通材料/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+*.log
+.workbuddy/

@@ -1,0 +1,50 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName Microsoft YaHei
+skinparam defaultFontSize 15
+skinparam dpi 180
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam ArrowColor #35536C
+skinparam classBackgroundColor #F3F6FA
+skinparam usecaseBackgroundColor #F3F6FA
+skinparam stateBackgroundColor #F3F6FA
+skinparam sequenceParticipantBackgroundColor #F3F6FA
+skinparam componentBackgroundColor #F3F6FA
+skinparam objectBackgroundColor #F3F6FA
+skinparam packageBackgroundColor white
+skinparam nodeBackgroundColor #F3F6FA
+skinparam databaseBackgroundColor #F3F6FA
+hide empty members
+|用户|
+start
+:访问业务系统页面;
+|认证中心|
+:检查中心会话有效性;
+if (中心会话有效?) then (有效)
+  :复用已有身份 无须再次输入密码;
+else (无效)
+  |用户|
+  :输入账号与密码;
+  |认证中心|
+  :核验凭据与账号状态;
+  if (凭据有效?) then (是)
+    :建立中心会话;
+  else (否)
+    :记录失败次数并拒绝登录;
+    stop
+  endif
+endif
+:检查该应用的访问权限;
+if (具有访问权限?) then (是)
+  |业务系统|
+  :建立应用会话;
+  :返回受保护页面或数据;
+else (否)
+  |认证中心|
+  :返回无权访问提示;
+endif
+stop
+
+@enduml

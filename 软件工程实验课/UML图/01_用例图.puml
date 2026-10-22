@@ -1,0 +1,46 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName Microsoft YaHei
+skinparam defaultFontSize 15
+skinparam dpi 180
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam ArrowColor #35536C
+skinparam classBackgroundColor #F3F6FA
+skinparam usecaseBackgroundColor #F3F6FA
+skinparam stateBackgroundColor #F3F6FA
+skinparam sequenceParticipantBackgroundColor #F3F6FA
+skinparam componentBackgroundColor #F3F6FA
+skinparam objectBackgroundColor #F3F6FA
+skinparam packageBackgroundColor white
+skinparam nodeBackgroundColor #F3F6FA
+skinparam databaseBackgroundColor #F3F6FA
+hide empty members
+left to right direction
+actor 普通用户 as U
+actor 管理员 as M
+actor 业务系统 as B
+M --|> U
+rectangle 统一认证登录系统 {
+usecase "UC01 账号登录" as UC1
+usecase "UC02 跨系统单点登录" as UC2
+usecase "UC03 访问受保护资源" as UC3
+usecase "UC04 退出登录" as UC4
+usecase "UC05 管理账号与角色" as UC5
+usecase "UC06 查询审计记录" as UC6
+usecase "身份凭据核验" as UC7
+}
+U --> UC1
+U --> UC2
+U --> UC3
+U --> UC4
+M --> UC5
+M --> UC6
+B --> UC2
+B --> UC3
+UC1 ..> UC7 : <<include>>
+UC2 ..> UC7 : <<include>>
+UC3 ..> UC7 : <<include>>
+
+@enduml

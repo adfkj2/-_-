@@ -1,0 +1,46 @@
+server:
+  port: 9000
+  servlet:
+    session:
+      cookie:
+        name: SESSION_CENTER
+        http-only: true
+        same-site: lax
+      timeout: 8h
+
+spring:
+  application:
+    name: sso-auth-server
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/sso?useUnicode=true&characterEncoding=utf8mb4&serverTimezone=UTC
+    username: ${SSO_DB_USER:sso}
+    password: ${SSO_DB_PASSWORD:sso}
+    hikari:
+      maximum-pool-size: 8
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  thymeleaf:
+    cache: false
+
+sso:
+  issuer: http://127.0.0.1:9000
+  clients:
+    app-a:
+      secret: ${SSO_APP_A_SECRET:app-a-secret}
+    app-b:
+      secret: ${SSO_APP_B_SECRET:app-b-secret}
+  demo:
+    # 演示账号口令，仅用于隔离环境；生产请用环境变量覆盖
+    password: "StudyPass2026!"
+    # 管理员口令独立，对应测试文档中的“测试环境专用安全密码”
+    admin-password: "AdminPass2026!"
+
+logging:
+  level:
+    org.springframework.security: INFO

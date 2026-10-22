@@ -1,0 +1,28 @@
+server:
+  port: 8082
+  servlet:
+    session:
+      cookie:
+        name: SESSION_B
+
+spring:
+  application:
+    name: app-b
+  security:
+    oauth2:
+      client:
+        registration:
+          sso:
+            client-id: app-b
+            client-secret: ${SSO_APP_B_SECRET:app-b-secret}
+            client-authentication-method: client_secret_basic
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope: openid,profile
+            client-name: 统一认证中心
+        provider:
+          sso:
+            authorization-uri: http://127.0.0.1:9000/oauth2/authorize
+            token-uri: http://127.0.0.1:9000/oauth2/token
+            jwk-set-uri: http://127.0.0.1:9000/oauth2/jwks
+            user-name-attribute: sub

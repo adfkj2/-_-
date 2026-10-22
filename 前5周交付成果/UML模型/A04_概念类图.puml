@@ -1,0 +1,56 @@
+@startuml
+!pragma layout smetana
+skinparam defaultFontName Microsoft YaHei
+skinparam defaultFontSize 15
+skinparam dpi 180
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam roundcorner 6
+skinparam ArrowColor #35536C
+skinparam classBackgroundColor #F3F6FA
+skinparam usecaseBackgroundColor #F3F6FA
+skinparam stateBackgroundColor #F3F6FA
+skinparam sequenceParticipantBackgroundColor #F3F6FA
+hide empty members
+left to right direction
+class 用户 {
+用户标识
+用户名
+账号状态
+}
+class 角色 {
+角色标识
+角色编码
+}
+class 应用 {
+客户端标识
+回调地址
+启用状态
+}
+class 中心会话 {
+会话标识
+创建与活动时间
+会话状态
+}
+class 应用授权 {
+授权标识
+到期时间
+}
+class 审计记录 {
+事件标识
+事件类型
+发生时间
+}
+class 异常事件 {
+处理状态
+处理说明
+}
+用户 "0..*" -- "0..*" 角色 : 拥有
+角色 "0..*" -- "0..*" 应用 : 获准访问
+用户 "1" -- "0..*" 中心会话
+中心会话 "1" -- "0..*" 应用授权
+应用 "1" -- "0..*" 应用授权
+用户 "0..1" -- "0..*" 审计记录 : 操作者
+审计记录 "1" -- "0..1" 异常事件 : 触发
+
+@enduml
