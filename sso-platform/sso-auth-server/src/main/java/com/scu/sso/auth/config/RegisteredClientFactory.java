@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
+import org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
@@ -42,6 +43,8 @@ public final class RegisteredClientFactory {
                 .tokenSettings(TokenSettings.builder()
                         .authorizationCodeTimeToLive(AUTHORIZATION_CODE_TTL)
                         .accessTokenTimeToLive(ACCESS_TOKEN_TTL)
+                        // 设计 4.1/BR-24：访问令牌必须是不透明令牌，令牌内容只存服务端，可即时吊销
+                        .accessTokenFormat(OAuth2TokenFormat.REFERENCE)
                         .reuseRefreshTokens(false)
                         .build())
                 .build();

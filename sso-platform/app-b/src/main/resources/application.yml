@@ -4,6 +4,24 @@ server:
     session:
       cookie:
         name: SESSION_B
+        http-only: true
+        same-site: lax
+      timeout: 8h
+
+sso:
+  # 认证中心基地址：端口与需求 1.6、设计 2.3 一致
+  center-base-url: http://127.0.0.1:8080
+  app-id: app-b
+  app-secret: ${SSO_APP_B_SECRET:app-b-secret}
+  demo:
+    # 本地演示账号：只存在进程内存，与中心账号体系无关（设计 4.6）
+    accounts:
+      localb: "${APP_B_LOCAL_PASSWORD:LocalPass2026!}"
+  introspection:
+    # 每次受保护请求都调用一次，不做正向缓存（设计 4.1、8.1）
+    uri: ${sso.center-base-url}/oauth2/introspect
+    connect-timeout-ms: 2000
+    read-timeout-ms: 2000
 
 spring:
   application:
@@ -13,8 +31,8 @@ spring:
       client:
         registration:
           sso:
-            client-id: app-b
-            client-secret: ${SSO_APP_B_SECRET:app-b-secret}
+            client-id: ${sso.app-id}
+            client-secret: ${sso.app-secret}
             client-authentication-method: client_secret_basic
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
@@ -22,7 +40,9 @@ spring:
             client-name: 统一认证中心
         provider:
           sso:
-            authorization-uri: http://127.0.0.1:9000/oauth2/authorize
-            token-uri: http://127.0.0.1:9000/oauth2/token
-            jwk-set-uri: http://127.0.0.1:9000/oauth2/jwks
+            authorization-uri: ${sso.center-base-url}/oauth2/authorize
+            token-uri: ${sso.center-base-url}/oauth2/token
+            jwk-set-uri: ${sso.center-base-url}/oauth2/jwks
             user-name-attribute: sub
+
+

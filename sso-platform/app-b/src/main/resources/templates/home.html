@@ -14,14 +14,17 @@
     form { margin-top: 18px; }
     button { padding: 7px 14px; border: 0; border-radius: 4px; background: #6b7280; color: #fff;
              font-size: 13px; cursor: pointer; }
+    .ok { display: inline-block; background: #d1fae5; color: #065f46; padding: 3px 10px;
+          border-radius: 12px; font-size: 12px; margin-bottom: 14px; }
   </style>
 </head>
 <body>
 <main>
   <h1 th:text="${appName}">图书信息服务 B</h1>
+  <div class="ok" th:if="${authMode == 'SSO'}">已通过统一认证</div>
   <p>当前用户：<strong th:text="${username}">alice01</strong></p>
   <p>身份标识（sub）：<code th:text="${subject}">subject</code></p>
-  <p>受保护接口：<code>/api/books</code>　未登录访问应返回 401。</p>
+  <p>受保护接口：<code>/api/app/books</code>、<code>/api/app/me</code>　未登录或授权已撤销时返回 401。</p>
   <form method="post" th:action="@{/logout}">
     <button type="submit">退出本应用</button>
   </form>

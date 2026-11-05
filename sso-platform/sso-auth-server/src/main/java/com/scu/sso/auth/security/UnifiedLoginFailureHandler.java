@@ -25,7 +25,7 @@ public class UnifiedLoginFailureHandler extends SimpleUrlAuthenticationFailureHa
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                         AuthenticationException exception) throws IOException, ServletException {
-        auditWriter.record("LOGIN_FAILURE", "FAILURE", null, request,
+        auditWriter.record("LOGIN_FAIL", "FAILURE", null, request,
                 "reason=" + exception.getClass().getSimpleName());
         super.onAuthenticationFailure(request, response, exception);
     }

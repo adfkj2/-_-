@@ -93,3 +93,53 @@ CREATE TABLE IF NOT EXISTS audit_event (
   KEY idx_audit_query (occurred_at, event_type, result),
   KEY idx_audit_user (actor_user_id, occurred_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='审计记录';
+
+-- Spring Authorization Server 1.5.x 官方 MySQL 脚本：授权记录必须落库，
+-- 否则退出、会话到期和撤权都无从吊销（设计 5.9、4.2）。
+CREATE TABLE IF NOT EXISTS oauth2_authorization (
+  id                            VARCHAR(100)  NOT NULL COMMENT '授权记录标识',
+  registered_client_id          VARCHAR(100)  NOT NULL COMMENT '客户端标识',
+  principal_name                VARCHAR(200)  NOT NULL COMMENT '主体名',
+  authorization_grant_type      VARCHAR(100)  NOT NULL COMMENT '授权类型',
+  authorized_scopes             VARCHAR(1000) DEFAULT NULL COMMENT '已授权范围',
+  attributes                    BLOB          DEFAULT NULL COMMENT '授权属性',
+  state                         VARCHAR(500)  DEFAULT NULL COMMENT 'state',
+  authorization_code_value      BLOB          DEFAULT NULL COMMENT '授权码',
+  authorization_code_issued_at  TIMESTAMP     NULL DEFAULT NULL,
+  authorization_code_expires_at TIMESTAMP     NULL DEFAULT NULL,
+  authorization_code_metadata   BLOB          DEFAULT NULL,
+  access_token_value            BLOB          DEFAULT NULL COMMENT '不透明访问令牌',
+  access_token_issued_at        TIMESTAMP     NULL DEFAULT NULL,
+  access_token_expires_at       TIMESTAMP     NULL DEFAULT NULL,
+  access_token_metadata         BLOB          DEFAULT NULL,
+  access_token_type             VARCHAR(100)  DEFAULT NULL,
+  access_token_scopes           VARCHAR(1000) DEFAULT NULL,
+  oidc_id_token_value           BLOB          DEFAULT NULL,
+  oidc_id_token_issued_at       TIMESTAMP     NULL DEFAULT NULL,
+  oidc_id_token_expires_at      TIMESTAMP     NULL DEFAULT NULL,
+  oidc_id_token_metadata        BLOB          DEFAULT NULL,
+  refresh_token_value           BLOB          DEFAULT NULL,
+  refresh_token_issued_at       TIMESTAMP     NULL DEFAULT NULL,
+  refresh_token_expires_at      TIMESTAMP     NULL DEFAULT NULL,
+  refresh_token_metadata        BLOB          DEFAULT NULL,
+  user_code_value               BLOB          DEFAULT NULL,
+  user_code_issued_at           TIMESTAMP     NULL DEFAULT NULL,
+  user_code_expires_at          TIMESTAMP     NULL DEFAULT NULL,
+  user_code_metadata            BLOB          DEFAULT NULL,
+  device_code_value             BLOB          DEFAULT NULL,
+  device_code_issued_at         TIMESTAMP     NULL DEFAULT NULL,
+  device_code_expires_at        TIMESTAMP     NULL DEFAULT NULL,
+  device_code_metadata          BLOB          DEFAULT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='OAuth2 授权记录';
+
+-- 授权记录与中心会话的关联：退出、到期、撤权时按 sid 反查并吊销授权（设计 4.2）。
+CREATE TABLE IF NOT EXISTS authorization_session_link (
+  authorization_id VARCHAR(100) NOT NULL COMMENT '授权记录标识',
+  sid              VARCHAR(64)  NOT NULL COMMENT '中心会话标识',
+  user_id          BIGINT       NOT NULL COMMENT '所属用户',
+  created_at       DATETIME(6)  NOT NULL COMMENT '建立时间',
+  PRIMARY KEY (authorization_id),
+  KEY idx_link_sid (sid),
+  KEY idx_link_user (user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='授权与中心会话关联';

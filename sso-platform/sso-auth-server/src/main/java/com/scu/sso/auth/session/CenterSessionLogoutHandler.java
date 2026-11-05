@@ -12,7 +12,8 @@ import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Component;
 
 /**
- * 统一退出（F04、BR-17）：撤销当前浏览器的中心会话，其他浏览器会话不受影响。
+ * 统一退出（F04、BR-17）：撤销该账号的全部中心会话并吊销其全部应用授权，
+ * 其他浏览器再次访问应用时必须重新认证。局部退出走 /api/me/logout?scope=local。
  */
 @Component
 @RequiredArgsConstructor
@@ -32,7 +33,8 @@ public class CenterSessionLogoutHandler implements LogoutHandler {
         if (session == null) {
             return;
         }
-        sessionService.revoke(session, "LOGOUT_GLOBAL");
-        auditWriter.record("LOGOUT_GLOBAL", "SUCCESS", session.getUserId(), request, "sid=" + session.getSid());
+        int revoked = sessionService.revokeAllOfUser(session.getUserId(), "LOGOUT_ALL_DEVICES");
+        auditWriter.record("LOGOUT_GLOBAL", "SUCCESS", session.getUserId(), request,
+                "sid=" + session.getSid() + ";revoked=" + revoked);
     }
 }

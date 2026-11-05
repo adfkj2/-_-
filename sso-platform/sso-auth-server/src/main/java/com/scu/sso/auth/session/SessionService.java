@@ -1,8 +1,10 @@
 package com.scu.sso.auth.session;
 
+import com.scu.sso.auth.audit.AuditWriter;
 import com.scu.sso.auth.domain.AppUser;
 import com.scu.sso.auth.domain.AuthSession;
 import com.scu.sso.auth.domain.SecurityPolicy;
+import com.scu.sso.auth.oauth.AuthorizationRevoker;
 import com.scu.sso.auth.repository.AuthSessionRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -30,6 +32,8 @@ public class SessionService {
 
     private final AuthSessionRepository repository;
     private final PolicyService policyService;
+    private final AuthorizationRevoker authorizationRevoker;
+    private final AuditWriter auditWriter;
 
     /**
      * 登录成功后建立中心会话，写入时限快照与设备摘要。
@@ -101,15 +105,26 @@ public class SessionService {
         session.setRevokedAt(Instant.now());
         session.setRevokeReason(reason);
         repository.save(session);
+        // 会话终止必须同时吊销该会话的授权，否则应用仍能用旧令牌读到受保护数据（设计 4.2）
+        authorizationRevoker.revokeBySid(session.getSid());
+        if (SessionStatus.EXPIRED.equals(status)) {
+            auditWriter.record("SESSION_EXPIRED", "SUCCESS", session.getUserId(), null,
+                    "sid=" + session.getSid() + ";reason=" + reason);
+        } else if (!reason.startsWith("LOGOUT_")) {
+            auditWriter.record("SESSION_REVOKE_BY_USER", "SUCCESS", session.getUserId(), null,
+                    "sid=" + session.getSid() + ";reason=" + reason);
+        }
         log.debug("会话终止 sid={} status={} reason={}", session.getSid(), status, reason);
     }
 
     /**
-     * 撤销某账号全部有效会话（改密、停用、统一退出全部设备）。
+     * 撤销某账号全部有效会话（改密、停用、统一退出全部设备），并吊销其全部授权。
      */
     @Transactional
     public int revokeAllOfUser(Long userId, String reason) {
-        return repository.revokeAllOfUser(userId, Instant.now(), reason);
+        int revoked = repository.revokeAllOfUser(userId, Instant.now(), reason);
+        authorizationRevoker.revokeByUser(userId);
+        return revoked;
     }
 
     public List<AuthSession> listOf(Long userId) {

@@ -1,5 +1,5 @@
 server:
-  port: 9000
+  port: 8080
   servlet:
     session:
       cookie:
@@ -29,7 +29,7 @@ spring:
     cache: false
 
 sso:
-  issuer: http://127.0.0.1:9000
+  issuer: http://127.0.0.1:8080
   clients:
     app-a:
       secret: ${SSO_APP_A_SECRET:app-a-secret}

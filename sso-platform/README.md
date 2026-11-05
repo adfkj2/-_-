@@ -10,7 +10,7 @@
 sso-platform/
 ├── pom.xml                 聚合与依赖版本
 ├── db/init.sql             建库建表脚本（MySQL 8.4，utf8mb4）
-├── sso-auth-server/        认证中心（9000）
+├── sso-auth-server/        认证中心（8080）
 │   ├── src/main/java/com/scu/sso/auth/
 │   │   ├── config/         授权服务器、安全链、演示数据
 │   │   ├── domain/         sys_user、auth_session、security_policy、audit_event
@@ -67,7 +67,10 @@ sso-platform/
    java -jar app-b/target/app-b-0.1.0.jar
    ```
 
-5. 打开 <http://127.0.0.1:8081/>，应跳转认证中心登录页；登录后回到 A；再打开 <http://127.0.0.1:8082/> 应免密进入。
+5. 打开 <http://127.0.0.1:8081/login>，页面同时给出“本地演示登录”与“统一认证登录”两个入口：
+   - 走统一认证登录并输入 `alice01`，回到 A 的受保护页面；再打开 <http://127.0.0.1:8082/>，点击统一认证登录应免密进入；
+   - 走本地演示登录（A 为 `locala`、B 为 `localb`），只能看到本地演示页，再进 B 仍需登录，用来对照“没有统一认证会怎样”。
+6. 首次部署需执行 `db/init.sql`，其中包含 Spring Authorization Server 的 `oauth2_authorization` 表与 `authorization_session_link` 表；缺表会导致登录成功但换码失败。
 
 ## 演示账号
 
@@ -86,9 +89,9 @@ sso-platform/
 | 需求 | 内容 | 主要实现 |
 | --- | --- | --- |
 | F01 集中账号登录 | 表单登录、状态与锁定校验、统一失败提示、登录后建立中心会话 | `SecurityConfig`、`DbUserDetailsService`、`SsoAuthenticationSuccessHandler`、`UnifiedLoginFailureHandler` |
-| F02 跨系统单点登录 | OIDC 授权码 + PKCE S256、复用中心会话、回调地址精确匹配 | `AuthorizationServerConfig`、`app-a` / `app-b` 客户端配置 |
-| F03 受保护资源访问控制 | 默认拒绝、未认证 401、会话无效即拒绝、内省端点由授权服务器提供 | `SessionValidityFilter`、各客户端 `SecurityConfig` |
-| F04 退出登录 | 统一退出撤销当前浏览器会话；接口支持 local / global 两种范围 | `CenterSessionLogoutHandler`、`LogoutApiController` |
+| F02 跨系统单点登录 | OIDC 授权码 + PKCE S256、复用中心会话、回调地址精确匹配；应用登录页同时提供本地演示登录与统一认证登录两个入口（I-WEB-01 至 04） | `AuthorizationServerConfig`、`AuditingAuthorizationService`、各应用 `SecurityConfig`、`LoginController` |
+| F03 受保护资源访问控制 | 默认拒绝、未认证 401；应用每次受保护请求调用中心 `/oauth2/introspect`，不做正向缓存，本地演示会话一律拒绝 | `AuthModeFilter`、`IntrospectionClient`、`SessionValidityFilter` |
+| F04 退出登录 | 局部退出生效于当前会话并吊销其授权；统一退出撤销该账号全部会话与授权，其它浏览器下一次访问即失效 | `CenterSessionLogoutHandler`、`LogoutApiController`、`AuthorizationRevoker` |
 | F05 会话有效期处理 | 空闲与绝对时限快照、每次访问判定、边界按大于等于 | `SessionPolicy`、`SessionService`、`SessionValidityFilter` |
 | F06 用户登录会话管理 | 本人会话列表与结束指定会话，越权返回 403 | `MeSessionController` |
 
@@ -104,15 +107,27 @@ sso-platform/
 | POST | /api/me/logout?scope=local\|global | 接口方式退出 |
 | GET | /oauth2/authorize | 授权端点 |
 | POST | /oauth2/token | 换码端点 |
-| POST | /oauth2/introspect | 令牌内省 |
+| POST | /oauth2/introspect | 令牌内省（应用每次受保护请求调用） |
+
+业务应用侧（A 8081、B 8082 相同结构，对应设计 I-WEB-01 至 05）：
+
+| 方法 | 路径 | 说明 |
+| --- | --- | --- |
+| GET | /login | 登录页，含本地演示登录与统一认证登录两个入口（P12） |
+| POST | /login/local | 本地演示登录，账号只存在应用内存（`sso.demo.accounts`） |
+| GET | /oauth2/authorization/sso | 发起统一认证，302 到中心 /oauth2/authorize |
+| GET | /local-demo | 本地演示页，标注“未通过统一认证”（P13） |
+| GET | /home、/api/app/* | 受保护页面与接口，仅 SSO 会话且内省通过 |
 
 ## 关键约定
 
-- **端口**：认证中心 9000，应用 A 8081，应用 B 8082。
+- **端口**：认证中心 8080，应用 A 8081，应用 B 8082。
 - **Cookie 名**：`SESSION_CENTER`、`SESSION_A`、`SESSION_B`。浏览器 Cookie 不按端口隔离，三个服务必须使用不同名称，否则无法演示跨系统单点登录。
 - **协议**：演示环境使用 HTTP，属隔离网络内的本地运行；需要 HTTPS 时由部署配置切换，代码不做区分。
 - **令牌时限**：授权码 60 秒一次性、访问令牌 10 分钟、不签发刷新令牌，常量集中在 `RegisteredClientFactory`，与需求 BR-24 一致。
-- **令牌时限**：授权码 60 秒一次性、访问令牌 10 分钟、不签发刷新令牌，常量集中在 `RegisteredClientFactory`，与需求 BR-24 一致。
+- **令牌格式**：访问令牌为不透明令牌（`OAuth2TokenFormat.REFERENCE`），内容只存服务端 `oauth2_authorization` 表，可被即时吊销；应用侧令牌只放服务端会话，浏览器仅持有 Cookie。
+- **应用侧双入口**：登录页同时提供本地演示登录（`authMode=LOCAL`，无令牌，只能进 `/local-demo`）与统一认证登录（`authMode=SSO`）。本地会话访问受保护资源时页面跳 `/login?needSso=1`、接口返回 401。
+- **撤销范围**：会话终止（退出、到期、用户手动结束）都会删除该会话的授权记录；统一退出另按用户批量撤销。
 - **客户端类型**：两个业务系统按机密客户端登记（`client_secret_basic`），密钥以散列保存，同时强制 PKCE S256。密钥通过 `SSO_APP_A_SECRET` / `SSO_APP_B_SECRET` 覆盖，演示默认值仅用于本机。
 - **时间**：数据库以 UTC 存储，界面按北京时间展示；会话判定只使用服务端时间。
 
@@ -122,7 +137,7 @@ sso-platform/
 mvn -B test
 ```
 
-当前包含 `SessionPolicyTest`：覆盖空闲时限边界、绝对时限优先与缺字段不放行三种情形，对应需求 BR-12。
+当前包含三个测试类：`SessionPolicyTest`（空闲/绝对时限边界与缺字段不放行，BR-12）、`RegisteredClientFactoryTest`（授权码与令牌时限、PKCE 强制、不签发刷新令牌，BR-24）、`MeSessionControllerTest`（会话列表与越权结束会话，F06）。
 
 ## 尚未实现（由其他成员承接）
 

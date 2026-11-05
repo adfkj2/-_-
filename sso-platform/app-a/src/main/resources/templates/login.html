@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="'登录 - ' + ${appName}">登录 - 教务信息服务 A</title>
+  <style>
+    body { font-family: system-ui, "Microsoft YaHei", sans-serif; margin: 0; background: #f5f6f8; }
+    main { max-width: 760px; margin: 48px auto; background: #fff; padding: 28px 32px; border-radius: 8px;
+           box-shadow: 0 2px 12px rgba(0, 0, 0, .08); }
+    h1 { font-size: 20px; margin: 0 0 6px; }
+    .sub { color: #666; font-size: 13px; margin: 0 0 20px; }
+    .cols { display: flex; gap: 20px; flex-wrap: wrap; }
+    .card { flex: 1 1 300px; border: 1px solid #e5e7eb; border-radius: 6px; padding: 16px 18px; }
+    .card h2 { font-size: 15px; margin: 0 0 4px; }
+    .tag { display: inline-block; font-size: 12px; padding: 1px 6px; border-radius: 10px; margin-left: 6px; }
+    .tag.local { background: #fef3c7; color: #92400e; }
+    .tag.sso { background: #dbeafe; color: #1e40af; }
+    p.hint { color: #6b7280; font-size: 12px; margin: 6px 0 12px; line-height: 1.6; }
+    label { display: block; font-size: 13px; margin: 10px 0 4px; color: #374151; }
+    input[type=text], input[type=password] { width: 100%; box-sizing: border-box; padding: 7px 9px;
+      border: 1px solid #d1d5db; border-radius: 4px; font-size: 14px; }
+    button { margin-top: 14px; width: 100%; padding: 9px 0; border: 0; border-radius: 4px; font-size: 14px;
+             cursor: pointer; }
+    button.local { background: #6b7280; color: #fff; }
+    a.sso { display: block; text-align: center; padding: 9px 0; margin-top: 14px; background: #1d4ed8; color: #fff;
+            border-radius: 4px; text-decoration: none; font-size: 14px; }
+    .alert { padding: 9px 12px; border-radius: 4px; font-size: 13px; margin-bottom: 16px; }
+    .alert.warn { background: #fff7ed; color: #9a3412; border: 1px solid #fed7aa; }
+    .alert.err { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+    .alert.ok { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+  </style>
+</head>
+<body>
+<main>
+  <h1 th:text="${appName}">教务信息服务 A</h1>
+  <p class="sub">本应用用于验证统一认证，登录方式二选一。</p>
+
+  <div class="alert warn" th:if="${needSso}">该资源需统一认证，请使用右侧的“统一认证登录”。</div>
+  <div class="alert warn" th:if="${expired}">会话已失效或授权已撤销，请重新登录。</div>
+  <div class="alert err" th:if="${loginError}">账号或口令不正确。</div>
+  <div class="alert ok" th:if="${loggedOut}">已退出本应用。</div>
+
+  <div class="cols">
+    <section class="card">
+      <h2>本地演示登录<span class="tag local">不进入统一认证</span></h2>
+      <p class="hint">
+        账号只存在本应用内存（<span th:text="${#strings.listJoin(demoUsers, ' / ')}">locala</span>），
+        登录后只能查看本地演示页；访问受保护数据会提示“该资源需统一认证”。
+      </p>
+      <form method="post" th:action="@{/login/local}">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+        <label for="username">用户名</label>
+        <input type="text" id="username" name="username" autocomplete="username" required>
+        <label for="password">口令</label>
+        <input type="password" id="password" name="password" autocomplete="current-password" required>
+        <button class="local" type="submit">本地演示登录</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>统一认证登录<span class="tag sso">使用中心账号</span></h2>
+      <p class="hint">
+        跳转认证中心完成登录，成功后本应用与另一业务系统可免登录互通；
+        令牌只在服务端会话中保存，浏览器仅持有会话 Cookie。
+      </p>
+      <a class="sso" th:href="@{/oauth2/authorization/sso}">统一认证登录</a>
+    </section>
+  </div>
+</main>
+</body>
+</html>

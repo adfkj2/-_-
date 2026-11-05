@@ -1,6 +1,13 @@
 package com.scu.sso.auth.config;
 
 import com.nimbusds.jose.jwk.JWKSet;
+import com.scu.sso.auth.audit.AuditWriter;
+import com.scu.sso.auth.oauth.AuditingAuthorizationService;
+import com.scu.sso.auth.oauth.AuthorizationLinkRepository;
+import com.scu.sso.auth.repository.AppUserRepository;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationService;
+import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
@@ -123,6 +130,21 @@ public class AuthorizationServerConfig {
                 new JwtGenerator(jwtEncoder),
                 new OAuth2AccessTokenGenerator(),
                 new OAuth2RefreshTokenGenerator());
+    }
+
+    /**
+     * 授权记录落库（设计 5.9）：客户端仓库仍用内存实现（应用接入属 F13），
+     * 但授权必须持久化，否则退出、到期、撤权无法吊销令牌。
+     */
+    @Bean
+    public OAuth2AuthorizationService authorizationService(JdbcTemplate jdbcTemplate,
+                                                          RegisteredClientRepository registeredClientRepository,
+                                                          AuthorizationLinkRepository linkRepository,
+                                                          AppUserRepository userRepository,
+                                                          AuditWriter auditWriter) {
+        return new AuditingAuthorizationService(
+                new JdbcOAuth2AuthorizationService(jdbcTemplate, registeredClientRepository),
+                linkRepository, userRepository, auditWriter);
     }
 
     @Bean
