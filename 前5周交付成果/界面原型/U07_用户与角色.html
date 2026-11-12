@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1200, initial-scale=1">
+  <title>U07 用户与角色</title>
+  <link rel="stylesheet" href="_shared.css">
+  <style>
+    table.tbl th.c-user { width: 118px; }
+    table.tbl th.c-name { width: 96px; }
+    table.tbl th.c-mail { width: 190px; }
+    table.tbl th.c-role { width: 96px; }
+    table.tbl th.c-state { width: 96px; }
+    table.tbl th.c-time { width: 140px; }
+    .table-wrap tr.sel td { background: #f5f9ff; }
+    .foot-note { margin-top: 10px; font-size: 11.5px; color: var(--ink-4); }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="mark">SC</span>统一身份认证中心<span style="font-weight:400;color:#9fb0c9;font-size:13px;">管理控制台</span></div>
+    <span class="spacer"></span>
+    <span class="meta">当前账号 <b>admin</b> · ADMIN</span>
+    <span class="divider"></span>
+    <span class="meta">2026-11-12 09:41</span>
+    <span class="divider"></span>
+    <a href="#">退出管理端</a>
+  </header>
+
+  <div class="shell">
+    <nav class="sidebar">
+      <div class="group">运维</div>
+      <div class="nav-item"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.2"/><rect x="14" y="3" width="7" height="7" rx="1.2"/><rect x="3" y="14" width="7" height="7" rx="1.2"/><rect x="14" y="14" width="7" height="7" rx="1.2"/></svg>管理首页</div>
+      <div class="nav-item active"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><path d="M16.5 8.6a3 3 0 0 1 0 5.6"/><path d="M18.4 20c0-2.3-.8-4-2.1-5"/></svg>用户与角色</div>
+      <div class="nav-item"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="5" rx="1.5"/><rect x="13" y="10" width="8" height="11" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/></svg>应用与授权</div>
+      <div class="group">治理</div>
+      <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M4 5h9M4 10h16M4 15h16M4 20h9"/></svg>审计与统计</div>
+      <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.4-3 8.2-7 9-4-.8-7-4.6-7-9V6l7-3z"/></svg>策略与异常</div>
+      <div class="group">账号</div>
+      <div class="nav-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="10" r="2.6"/><path d="M7.6 18.4c1-2.2 2.6-3.3 4.4-3.3s3.4 1.1 4.4 3.3"/></svg>我的个人中心</div>
+      <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M14 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8"/><path d="M17 8l4 4-4 4"/><path d="M21 12H10"/></svg>统一退出</div>
+    </nav>
+
+    <main class="content">
+      <div class="page-head">
+        <div>
+          <h1>用户与角色</h1>
+          <p class="desc">共 128 个账号，其中 6 个待审核、3 个处于锁定状态；停用与角色变更将立即影响已授权会话。</p>
+        </div>
+        <div class="actions">
+          <button class="btn" type="button">批量审核</button>
+          <button class="btn btn-primary" type="button">新建用户</button>
+        </div>
+      </div>
+
+      <div class="filter-bar">
+        <span class="label">关键字</span>
+        <input class="input w-md" type="text" value="" placeholder="用户名 / 显示名 / 邮箱">
+        <span class="label">状态</span>
+        <select class="select w-sm">
+          <option>全部</option><option>待审核</option><option>正常</option><option>停用</option><option>锁定</option>
+        </select>
+        <span class="label">角色</span>
+        <select class="select w-sm">
+          <option>全部</option><option>ADMIN</option><option>TEACHER</option><option>STUDENT</option>
+        </select>
+        <button class="btn btn-primary btn-sm" type="button" style="height:30px;">查询</button>
+        <button class="btn btn-sm" type="button" style="height:30px;">重置</button>
+        <span class="spacer"></span>
+        <span class="f12 c3">每页 10 条 · 服务器端分页</span>
+      </div>
+
+      <div class="table-wrap">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th class="c-user">用户名</th>
+              <th class="c-name">显示名</th>
+              <th class="c-mail">邮箱</th>
+              <th class="c-role">角色</th>
+              <th class="c-state">状态</th>
+              <th class="c-time">最近登录</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="sel">
+              <td class="strong">admin</td><td>系统管理员</td><td>admin@scu.edu.cn</td>
+              <td><span class="badge badge-brand">ADMIN</span></td>
+              <td><span class="badge badge-ok"><i class="dot"></i>ACTIVE</span></td>
+              <td class="mono">2026-11-12 09:41</td>
+              <td><div class="row-actions"><button class="btn btn-sm" type="button">重置密码</button></div></td>
+            </tr>
+            <tr>
+              <td class="strong">alice01</td><td>李爱丽</td><td>alice01@scu.edu.cn</td>
+              <td><span class="badge badge-muted">TEACHER</span></td>
+              <td><span class="badge badge-ok"><i class="dot"></i>ACTIVE</span></td>
+              <td class="mono">2026-11-12 08:20</td>
+              <td><div class="row-actions"><button class="btn btn-sm" type="button">停用</button><button class="btn btn-sm" type="button">分配角色</button></div></td>
+            </tr>
+            <tr>
+              <td class="strong">bob02</td><td>王博</td><td>bob02@scu.edu.cn</td>
+              <td><span class="badge badge-muted">STUDENT</span></td>
+              <td><span class="badge badge-warn"><i class="dot"></i>PENDING</span></td>
+              <td class="mono">—</td>
+              <td><div class="row-actions"><button class="btn btn-sm btn-primary" type="button">审核</button></div></td>
+            </tr>
+            <tr>
+              <td class="strong">carol03</td><td>张卡罗</td><td>carol03@scu.edu.cn</td>
+              <td><span class="badge badge-muted">STUDENT</span></td>
+              <td><span class="badge badge-ok"><i class="dot"></i>ACTIVE</span></td>
+              <td class="mono">2026-11-11 21:03</td>
+              <td><div class="row-actions"><button class="btn btn-sm" type="button">停用</button><button class="btn btn-sm" type="button">分配角色</button></div></td>
+            </tr>
+            <tr>
+              <td class="strong">dave04</td><td>陈大伟</td><td>dave04@scu.edu.cn</td>
+              <td><span class="badge badge-muted">TEACHER</span></td>
+              <td><span class="badge badge-err"><i class="dot"></i>DISABLED</span></td>
+              <td class="mono">2026-10-28 14:52</td>
+              <td><div class="row-actions"><button class="btn btn-sm" type="button">启用</button></div></td>
+            </tr>
+            <tr>
+              <td class="strong">erin05</td><td>刘依琳</td><td>erin05@scu.edu.cn</td>
+              <td><span class="badge badge-muted">STUDENT</span></td>
+              <td><span class="badge badge-warn"><i class="dot"></i>LOCKED</span></td>
+              <td class="mono">2026-11-12 07:15</td>
+              <td><div class="row-actions"><button class="btn btn-sm" type="button">解锁</button><button class="btn btn-sm" type="button">重置密码</button></div></td>
+            </tr>
+            <tr>
+              <td class="strong">frank06</td><td>赵方</td><td>frank06@scu.edu.cn</td>
+              <td><span class="badge badge-muted">TEACHER</span></td>
+              <td><span class="badge badge-ok"><i class="dot"></i>ACTIVE</span></td>
+              <td class="mono">2026-11-11 16:40</td>
+              <td><div class="row-actions"><button class="btn btn-sm" type="button">停用</button><button class="btn btn-sm" type="button">分配角色</button></div></td>
+            </tr>
+            <tr>
+              <td class="strong">grace07</td><td>孙格蕾</td><td>grace07@scu.edu.cn</td>
+              <td><span class="badge badge-muted">STUDENT</span></td>
+              <td><span class="badge badge-warn"><i class="dot"></i>PENDING</span></td>
+              <td class="mono">—</td>
+              <td><div class="row-actions"><button class="btn btn-sm btn-primary" type="button">审核</button></div></td>
+            </tr>
+            <tr>
+              <td class="strong">heidi08</td><td>周海蒂</td><td>heidi08@scu.edu.cn</td>
+              <td><span class="badge badge-muted">STUDENT</span></td>
+              <td><span class="badge badge-ok"><i class="dot"></i>ACTIVE</span></td>
+              <td class="mono">2026-11-10 19:22</td>
+              <td><div class="row-actions"><button class="btn btn-sm" type="button">停用</button><button class="btn btn-sm" type="button">分配角色</button></div></td>
+            </tr>
+            <tr>
+              <td class="strong">ivan09</td><td>吴伊凡</td><td>ivan09@scu.edu.cn</td>
+              <td><span class="badge badge-muted">TEACHER</span></td>
+              <td><span class="badge badge-ok"><i class="dot"></i>ACTIVE</span></td>
+              <td class="mono">2026-11-10 10:08</td>
+              <td><div class="row-actions"><button class="btn btn-sm" type="button">停用</button><button class="btn btn-sm" type="button">分配角色</button></div></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="pager">
+          <span>共 128 条 · 当前第 1 / 13 页</span>
+          <span class="spacer"></span>
+          <span class="page">上一页</span>
+          <span class="page active">1</span>
+          <span class="page">2</span>
+          <span class="page">3</span>
+          <span class="page">…</span>
+          <span class="page">13</span>
+          <span class="page">下一页</span>
+        </div>
+      </div>
+      <div class="foot-note">停用、解锁、重置密码与角色变更均在同一事务内写入 audit_event，并递增 auth_version 使已有会话失效。</div>
+    </main>
+  </div>
+</body>
+</html>

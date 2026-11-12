@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1200, initial-scale=1">
+  <title>U11 业务应用首页</title>
+  <link rel="stylesheet" href="_shared.css">
+  <style>
+    .app-stage {
+      max-width: 1020px; margin: 0 auto; min-height: 698px;
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    .hello { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .hello h1 { font-size: 21px; font-weight: 600; margin: 0; }
+    .hello .sub { font-size: 12.5px; color: var(--ink-3); margin: 2px 0 0; }
+    .hello .right { margin-left: auto; display: flex; gap: 8px; }
+    .cols { display: flex; gap: 14px; }
+    .cols .main { flex: 1.55; min-width: 0; }
+    .cols .side { flex: 1; min-width: 0; }
+    .ssoline {
+      display: flex; align-items: center; gap: 8px; padding: 8px 14px;
+      background: #ecfdf5; border-bottom: 1px solid #bbf7d0; font-size: 12px; color: #15803d;
+    }
+    .card h2 .tag { margin-left: 2px; }
+    .exit-row { display: flex; gap: 12px; margin-top: 12px; }
+    .exit-card { flex: 1; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; padding: 11px 14px; }
+    .exit-card h3 { font-size: 13px; margin: 0 0 3px; font-weight: 600; }
+    .exit-card p { font-size: 11.5px; color: var(--ink-3); margin: 0 0 8px; line-height: 1.6; }
+    .data-note { font-size: 11px; color: var(--ink-4); padding: 6px 14px 10px; }
+    table.tbl th.c-no { width: 74px; } table.tbl th.c-cr { width: 60px; }
+    table.tbl th.c-sc { width: 62px; } table.tbl th.c-gp { width: 62px; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="mark">A</span>教务信息服务 A</div>
+    <span class="spacer"></span>
+    <span class="meta">当前用户 <b>alice01</b> · 教师</span>
+    <span class="badge badge-brand" style="margin-left:8px;">统一认证</span>
+    <span class="divider"></span>
+    <a href="#">退出本应用</a>
+    <span class="divider"></span>
+    <a href="#">统一退出</a>
+  </header>
+
+  <div class="app-stage">
+    <div class="hello">
+      <div>
+        <h1>您好，李爱丽</h1>
+        <p class="sub">本页数据来自教务库，仅在统一认证会话有效时返回。</p>
+      </div>
+      <div class="right">
+        <button class="btn" type="button">查看选课</button>
+        <button class="btn btn-primary" type="button">打印成绩单</button>
+      </div>
+    </div>
+
+    <div class="cols">
+      <div class="main">
+        <section class="card" style="padding-bottom:0;">
+          <h2>2026 秋季学期成绩<span class="tag sso">受保护数据</span></h2>
+          <p class="hint">调用 <span class="mono f12">GET /api/app/grades</span>，请求携带应用会话令牌，由认证中心内省通过后返回。</p>
+          <table class="tbl" style="margin: 0 -16px; width: calc(100% + 32px);">
+            <thead>
+              <tr><th class="c-no">课程号</th><th>课程名称</th><th class="c-cr">学分</th><th class="c-sc">成绩</th><th class="c-gp">绩点</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="mono">CS301</td><td class="strong">软件工程</td><td>3.0</td><td>92</td><td>4.2</td></tr>
+              <tr><td class="mono">CS305</td><td class="strong">数据库系统</td><td>3.0</td><td>88</td><td>3.8</td></tr>
+              <tr><td class="mono">CS310</td><td class="strong">计算机网络</td><td>2.5</td><td>85</td><td>3.5</td></tr>
+              <tr><td class="mono">MA201</td><td class="strong">概率与统计</td><td>2.0</td><td>90</td><td>4.0</td></tr>
+            </tbody>
+          </table>
+          <div class="data-note">共 4 门课程 · 平均绩点 3.87 · 数据更新时间 2026-11-12 06:00</div>
+        </section>
+
+        <div class="exit-row">
+          <div class="exit-card">
+            <h3>退出本应用</h3>
+            <p>只清除 A 应用的本地会话，中心会话与 B 应用保持登录，再次访问需重新授权。</p>
+            <button class="btn btn-sm" type="button">退出本应用</button>
+          </div>
+          <div class="exit-card">
+            <h3>统一退出</h3>
+            <p>撤销中心会话及全部已授权应用，A、B 同时下线，适用于公共设备。</p>
+            <button class="btn btn-sm btn-danger" type="button">统一退出</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="side">
+        <section class="card" style="padding-bottom: 8px;">
+          <div class="ssoline">
+            <span>✓</span><span>已通过统一认证 · authMode = SSO</span>
+          </div>
+          <h2 style="margin-top: 10px;">账号与会话</h2>
+          <div class="kv"><span class="k">用户</span><span class="v">alice01（李爱丽）</span></div>
+          <div class="kv"><span class="k">角色</span><span class="v">TEACHER</span></div>
+          <div class="kv"><span class="k">认证方式</span><span class="v">OIDC 授权码 + PKCE</span></div>
+          <div class="kv"><span class="k">客户端</span><span class="v mono">app-a</span></div>
+          <div class="kv"><span class="k">令牌存放</span><span class="v">仅服务端会话，浏览器只持有 Cookie</span></div>
+          <div class="kv"><span class="k">上次内省</span><span class="v mono">2026-11-12 09:12:05</span></div>
+          <div class="kv"><span class="k">空闲剩余</span><span class="v">28 分 41 秒（共 30 分钟）</span></div>
+        </section>
+
+        <section class="card" style="margin-top: 12px;">
+          <h2>跨应用跳转</h2>
+          <p class="hint">同一中心会话下访问 B 应用无需再次输入密码。</p>
+          <a class="link-btn" href="#">前往教务信息服务 B</a>
+          <div class="data-note" style="padding: 8px 0 0;">跳转失败时返回本页并提示“该资源需统一认证”。</div>
+        </section>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

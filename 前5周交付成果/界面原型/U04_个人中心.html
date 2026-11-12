@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1200, initial-scale=1">
+  <title>U04 个人中心</title>
+  <link rel="stylesheet" href="_shared.css">
+  <style>
+    .pc { display: flex; gap: 14px; padding: 18px 24px; }
+    .pc-left { flex: 0 0 330px; display: flex; flex-direction: column; gap: 12px; }
+    .pc-right { flex: 1; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+    .me { display: flex; align-items: center; gap: 12px; padding: 14px; border-bottom: 1px solid var(--line); }
+    .avatar {
+      width: 46px; height: 46px; border-radius: 50%; flex: 0 0 46px;
+      background: var(--brand-soft); color: var(--brand-dark);
+      display: grid; place-items: center; font-size: 18px; font-weight: 600;
+      border: 1px solid var(--brand-soft-2);
+    }
+    .me .n { font-size: 15px; font-weight: 600; }
+    .me .u { font-size: 12px; color: var(--ink-3); }
+    .kv-list { padding: 4px 14px 10px; }
+    .field input { height: 34px; font-size: 13.5px; }
+    .field { margin-bottom: 10px; }
+    table.tbl th.c-dev { width: 210px; }
+    table.tbl th.c-ip { width: 190px; }
+    table.tbl th.c-act { width: 150px; }
+    .cur-tag { font-size: 11px; color: var(--ok-fg); border: 1px solid var(--ok-line); background: var(--ok-bg);
+               border-radius: 9px; padding: 0 6px; margin-left: 6px; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="mark">SC</span>统一身份认证中心</div>
+    <span class="spacer"></span>
+    <span class="meta">当前账号 <b>alice01</b> · TEACHER</span>
+    <span class="divider"></span>
+    <a href="#">返回应用</a>
+    <span class="divider"></span>
+    <a href="#">统一退出</a>
+  </header>
+
+  <div class="pc">
+    <div class="pc-left">
+      <section class="panel">
+        <div class="me">
+          <div class="avatar">李</div>
+          <div>
+            <div class="n">李爱丽</div>
+            <div class="u">alice01 · 教师</div>
+          </div>
+          <span class="badge badge-ok right"><i class="dot"></i>ACTIVE</span>
+        </div>
+        <div class="kv-list">
+          <div class="kv"><span class="k">邮箱</span><span class="v">alice01@scu.edu.cn</span></div>
+          <div class="kv"><span class="k">角色</span><span class="v">TEACHER · 教师</span></div>
+          <div class="kv"><span class="k">最近登录</span><span class="v">2026-11-12 09:12 · 10.21.8.34</span></div>
+          <div class="kv"><span class="k">账号创建</span><span class="v">2026-09-01</span></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">修改密码<span class="sub">修改后其他会话将失效</span></div>
+        <div class="panel-body">
+          <div class="field">
+            <label for="op">当前密码</label>
+            <input type="password" id="op" value="StudyPass2026!">
+          </div>
+          <div class="field">
+            <label for="np">新密码</label>
+            <input type="password" id="np" placeholder="至少 10 位，含字母与数字">
+          </div>
+          <div class="field">
+            <label for="np2">确认新密码</label>
+            <input type="password" id="np2">
+          </div>
+          <button class="btn btn-primary" type="button" style="width:100%;">保存新密码</button>
+        </div>
+      </section>
+    </div>
+
+    <div class="pc-right">
+      <section class="panel">
+        <div class="panel-head">
+          我当前的登录会话<span class="sub">共 2 个有效会话</span>
+          <span class="right"><button class="btn btn-sm btn-danger" type="button">结束其他会话</button></span>
+        </div>
+        <table class="tbl">
+          <thead>
+            <tr><th class="c-dev">设备 / 浏览器</th><th class="c-ip">来源 IP</th><th class="c-act">最近活动</th><th>操作</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="strong">Windows · Edge 140<span class="cur-tag">当前会话</span></td>
+              <td class="mono">10.21.8.34</td>
+              <td class="mono">2026-11-12 09:41</td>
+              <td><button class="btn btn-sm" type="button" disabled>本机</button></td>
+            </tr>
+            <tr>
+              <td class="strong">macOS · Safari 18</td>
+              <td class="mono">10.21.9.77</td>
+              <td class="mono">2026-11-12 08:55</td>
+              <td><button class="btn btn-sm" type="button">结束会话</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">我获授权的应用<span class="sub">角色实时生效，撤销后下一次访问即拦截</span></div>
+        <table class="tbl">
+          <thead>
+            <tr><th>应用</th><th class="c-ip">客户端标识</th><th class="c-act">授权时间</th><th>状态</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="strong">教务信息服务 A</td><td class="mono">app-a</td>
+              <td class="mono">2026-11-12 09:12</td><td><span class="badge badge-ok"><i class="dot"></i>已授权</span></td>
+            </tr>
+            <tr>
+              <td class="strong">教务信息服务 B</td><td class="mono">app-b</td>
+              <td class="mono">2026-11-11 15:30</td><td><span class="badge badge-ok"><i class="dot"></i>已授权</span></td>
+            </tr>
+            <tr>
+              <td class="strong">图书馆借阅查询</td><td class="mono">app-lib</td>
+              <td class="mono">—</td><td><span class="badge badge-muted">未授权</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">最近登录记录<span class="sub">仅显示最近 4 次</span>
+          <span class="right f12 c4">来源与设备信息已脱敏</span>
+        </div>
+        <table class="tbl">
+          <thead>
+            <tr><th class="c-act">时间</th><th class="c-ip">来源 IP</th><th>方式</th><th style="width:96px;">结果</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="mono">2026-11-12 09:12</td><td class="mono">10.21.8.34</td><td>密码登录</td>
+                <td><span class="badge badge-ok">成功</span></td></tr>
+            <tr><td class="mono">2026-11-11 15:28</td><td class="mono">10.21.8.34</td><td>密码登录</td>
+                <td><span class="badge badge-ok">成功</span></td></tr>
+            <tr><td class="mono">2026-11-10 20:41</td><td class="mono">10.21.9.77</td><td>密码登录</td>
+                <td><span class="badge badge-err">失败</span></td></tr>
+            <tr><td class="mono">2026-11-10 20:39</td><td class="mono">10.21.9.77</td><td>密码登录</td>
+                <td><span class="badge badge-err">失败</span></td></tr>
+          </tbody>
+        </table>
+      </section>
+    </div>
+  </div>
+</body>
+</html>

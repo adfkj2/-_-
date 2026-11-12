@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1200, initial-scale=1">
+  <title>U05 统一退出确认页</title>
+  <link rel="stylesheet" href="_shared.css">
+  <style>
+    .auth-card { width: 520px; padding: 24px 28px 20px; }
+    .scope { border: 1px solid var(--line); border-radius: 6px; overflow: hidden; margin-bottom: 14px; }
+    .scope-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 12px; border-bottom: 1px solid #f1f2f4; font-size: 13px;
+    }
+    .scope-item:last-child { border-bottom: 0; }
+    .scope-item .nm { font-weight: 600; color: var(--ink-1); }
+    .scope-item .meta { font-size: 11.5px; color: var(--ink-3); }
+    .radio-row { display: flex; gap: 10px; margin-bottom: 14px; }
+    .radio-opt {
+      flex: 1; border: 1px solid var(--line-strong); border-radius: 6px;
+      padding: 9px 11px; font-size: 12.5px; color: var(--ink-2);
+      display: flex; gap: 8px; align-items: flex-start;
+    }
+    .radio-opt.sel { border-color: var(--brand); background: var(--brand-soft); }
+    .radio-dot {
+      flex: 0 0 14px; width: 14px; height: 14px; border-radius: 50%;
+      border: 1.5px solid var(--line-strong); background: #fff; margin-top: 2px;
+    }
+    .radio-opt.sel .radio-dot { border: 4px solid var(--brand); }
+    .radio-opt b { display: block; font-size: 13px; color: var(--ink-1); font-weight: 600; }
+    .btn-danger-solid { background: #b91c1c; border-color: #b91c1c; color: #fff; font-weight: 500; }
+    .btn-row { display: flex; gap: 10px; }
+    .btn-row .btn { flex: 1; height: 40px; }
+  </style>
+</head>
+<body>
+  <div class="auth-page">
+    <div class="auth-card">
+      <div class="auth-brand">
+        <div class="mark">SC</div>
+        <div class="name">统一身份认证中心<span>统一退出 · 撤销中心会话与授权关联</span></div>
+      </div>
+
+      <h1 class="auth-title">确认退出登录？</h1>
+      <p class="auth-sub">退出后需重新进行统一认证，已授权应用将在下一次访问时被要求重新登录。</p>
+
+      <div class="alert alert-info">
+        <span class="ico">i</span>
+        <div>退出只影响登录状态，不会清除各应用中的业务数据，也不会修改密码。</div>
+      </div>
+
+      <div class="scope">
+        <div class="scope-item">
+          <span class="badge badge-brand">A</span>
+          <div><div class="nm">教务信息服务 A</div><div class="meta">app-a · 令牌已于 09:12 内省通过</div></div>
+          <span class="badge badge-warn right"><i class="dot"></i>将撤销</span>
+        </div>
+        <div class="scope-item">
+          <span class="badge badge-brand">B</span>
+          <div><div class="nm">教务信息服务 B</div><div class="meta">app-b · 本次未访问，仍存在有效授权</div></div>
+          <span class="badge badge-warn right"><i class="dot"></i>将撤销</span>
+        </div>
+      </div>
+
+      <div class="radio-row">
+        <div class="radio-opt sel">
+          <span class="radio-dot"></span>
+          <div><b>仅退出当前会话</b>本设备浏览器会话失效，其他设备登录状态保留</div>
+        </div>
+        <div class="radio-opt">
+          <span class="radio-dot"></span>
+          <div><b>退出全部设备</b>撤销该账号的全部中心会话，共 2 个设备</div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn" type="button">取消并返回</button>
+        <button class="btn btn-danger-solid" type="button">确认退出</button>
+      </div>
+
+      <div class="auth-foot">
+        <span>撤销完成后将写入审计事件 <span class="mono f12">SESSION_REVOKE</span></span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

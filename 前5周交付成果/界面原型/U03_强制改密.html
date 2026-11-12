@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1200, initial-scale=1">
+  <title>U03 强制改密页</title>
+  <link rel="stylesheet" href="_shared.css">
+  <style>
+    .auth-card { width: 460px; }
+    .strength { display: flex; gap: 5px; margin-top: 7px; align-items: center; }
+    .strength .bar { flex: 1; height: 4px; border-radius: 2px; background: #e5e7eb; }
+    .strength .bar.on-1 { background: #d97706; } .strength .bar.on-2 { background: #d97706; }
+    .strength .txt { flex: 0 0 auto; font-size: 11.5px; color: #b45309; margin-left: 4px; }
+    .rule-list { margin: 6px 0 0; padding: 0; list-style: none; font-size: 11.5px; color: var(--ink-3); }
+    .rule-list li { padding: 1px 0; }
+    .rule-list li.ok { color: var(--ok-fg); }
+    .rule-list li.no::before { content: "○ "; }
+    .rule-list li.ok::before { content: "● "; }
+    .btn-row { display: flex; gap: 10px; }
+    .btn-row .btn { flex: 1; height: 40px; }
+  </style>
+</head>
+<body>
+  <div class="auth-page">
+    <div class="auth-card">
+      <div class="auth-brand">
+        <div class="mark">SC</div>
+        <div class="name">统一身份认证中心<span>首次登录或密码被重置后的强制改密</span></div>
+      </div>
+
+      <h1 class="auth-title">修改密码</h1>
+      <p class="auth-sub">当前账号处于待改密状态，完成修改后才能访问个人中心与应用。</p>
+
+      <div class="alert alert-warn">
+        <span class="ico">!</span>
+        <div>系统检测到本次登录使用一次性密码，出于安全考虑必须先设置新密码。改密成功后其他设备上的登录状态将被撤销。</div>
+      </div>
+
+      <div class="field">
+        <label for="pw0">当前密码（一次性）</label>
+        <input type="password" id="pw0" value="Tmp#2026abc">
+      </div>
+      <div class="field">
+        <label for="pw1">新密码</label>
+        <input type="password" id="pw1" value="StudyPass2026!">
+        <div class="strength">
+          <span class="bar on-1"></span><span class="bar on-2"></span><span class="bar"></span><span class="bar"></span>
+          <span class="txt">强度：中</span>
+        </div>
+        <ul class="rule-list">
+          <li class="ok">长度不少于 10 位</li>
+          <li class="ok">包含字母与数字</li>
+          <li class="no">建议增加符号或大小写混用</li>
+        </ul>
+      </div>
+      <div class="field">
+        <label for="pw2">确认新密码</label>
+        <input type="password" id="pw2" value="StudyPass2026!">
+      </div>
+
+      <div class="btn-row">
+        <button class="btn" type="button">退出登录</button>
+        <button class="btn btn-primary" type="button">修改并继续</button>
+      </div>
+
+      <div class="auth-foot">
+        <span>新密码不得与最近 3 次使用过的密码相同</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

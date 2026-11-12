@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1200, initial-scale=1">
+  <title>U10 策略与异常</title>
+  <link rel="stylesheet" href="_shared.css">
+  <style>
+    .form-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px 16px; padding: 10px 14px 2px; }
+    .form-grid .field { margin-bottom: 6px; }
+    .form-grid .field input, .form-grid .field select { height: 32px; font-size: 13px; width: 100%;
+      border: 1px solid var(--line-strong); border-radius: var(--radius-sm); padding: 0 9px; font-family: inherit; color: var(--ink-1); }
+    .form-grid .field > label { font-size: 12.5px; color: var(--ink-3); font-weight: 400; margin-bottom: 3px; }
+    .ver { display: flex; align-items: center; gap: 10px; padding: 0 14px 12px; font-size: 11.5px; color: var(--ink-4); }
+    .ver .mono { background: #f3f4f6; border: 1px solid var(--line); border-radius: 3px; padding: 1px 6px; color: var(--ink-2); }
+    .panel-foot { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-top: 1px solid var(--line); }
+    .panel-foot .tip { font-size: 11.5px; color: var(--ink-4); }
+    table.tbl th.c-id { width: 90px; } table.tbl th.c-ty { width: 132px; }
+    table.tbl th.c-ob { width: 200px; } table.tbl th.c-st { width: 96px; } table.tbl th.c-tm { width: 122px; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="mark">SC</span>统一身份认证中心<span style="font-weight:400;color:#9fb0c9;font-size:13px;">管理控制台</span></div>
+    <span class="spacer"></span>
+    <span class="meta">当前账号 <b>admin</b> · ADMIN</span>
+    <span class="divider"></span>
+    <span class="meta">2026-11-12 09:41</span>
+    <span class="divider"></span>
+    <a href="#">退出管理端</a>
+  </header>
+
+  <div class="shell">
+    <nav class="sidebar">
+      <div class="group">运维</div>
+      <div class="nav-item"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.2"/><rect x="14" y="3" width="7" height="7" rx="1.2"/><rect x="3" y="14" width="7" height="7" rx="1.2"/><rect x="14" y="14" width="7" height="7" rx="1.2"/></svg>管理首页</div>
+      <div class="nav-item"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><path d="M16.5 8.6a3 3 0 0 1 0 5.6"/><path d="M18.4 20c0-2.3-.8-4-2.1-5"/></svg>用户与角色</div>
+      <div class="nav-item"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="5" rx="1.5"/><rect x="13" y="10" width="8" height="11" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/></svg>应用与授权</div>
+      <div class="group">治理</div>
+      <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M4 5h9M4 10h16M4 15h16M4 20h9"/></svg>审计与统计</div>
+      <div class="nav-item active"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.4-3 8.2-7 9-4-.8-7-4.6-7-9V6l7-3z"/></svg>策略与异常</div>
+      <div class="group">账号</div>
+      <div class="nav-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="10" r="2.6"/><path d="M7.6 18.4c1-2.2 2.6-3.3 4.4-3.3s3.4 1.1 4.4 3.3"/></svg>我的个人中心</div>
+      <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M14 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8"/><path d="M17 8l4 4-4 4"/><path d="M21 12H10"/></svg>统一退出</div>
+    </nav>
+
+    <main class="content">
+      <div class="page-head">
+        <div>
+          <h1>策略与异常</h1>
+          <p class="desc">策略以单行版本表保存，更新只影响此后新建的会话；异常事件需填写关闭原因。</p>
+        </div>
+        <div class="actions">
+          <button class="btn" type="button">查看变更历史</button>
+        </div>
+      </div>
+
+      <section class="panel mb12">
+        <div class="panel-head">安全策略<span class="sub">当前版本 v7</span>
+          <span class="right"><span class="badge badge-brand">全局 / 管理端双范围</span></span>
+        </div>
+        <div class="form-grid">
+          <div class="field"><label>全局空闲超时（分钟）</label><input type="text" value="30"></div>
+          <div class="field"><label>全局绝对超时（小时）</label><input type="text" value="8"></div>
+          <div class="field"><label>最大连续失败次数</label><input type="text" value="5"></div>
+          <div class="field"><label>管理端空闲超时（分钟）</label><input type="text" value="15"></div>
+          <div class="field"><label>管理端绝对超时（小时）</label><input type="text" value="4"></div>
+          <div class="field"><label>账号锁定（分钟）</label><input type="text" value="15"></div>
+          <div class="field"><label>密码最小长度</label><input type="text" value="10"></div>
+          <div class="field"><label>访问令牌有效期（分钟）</label><input type="text" value="15"></div>
+          <div class="field"><label>并发会话上限</label><input type="text" value="3"></div>
+        </div>
+        <div class="panel-foot">
+          <span class="tip">最近更新 <span class="mono">2026-11-10 10:22</span> · version = 7 · 空闲须 ≤ 绝对，冲突返回 409</span>
+          <span class="spacer"></span>
+          <button class="btn btn-sm" type="button">放弃修改</button>
+          <button class="btn btn-sm btn-primary" type="button">保存策略</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">异常事件<span class="sub">开放 3 条 · 处理中 1 条</span>
+          <span class="right"><span class="f12 c4">按发生时间倒序</span></span>
+        </div>
+        <table class="tbl">
+          <thead>
+            <tr><th class="c-id">事件号</th><th class="c-ty">类型</th><th class="c-ob">触发对象</th>
+                <th class="c-st">状态</th><th class="c-tm">发生时间</th><th>操作</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="mono">EV-1042</td><td class="mono">AUTH_RATE_LIMIT</td><td>IP 10.21.9.77 · 匿名注册</td>
+              <td><span class="badge badge-err"><i class="dot"></i>OPEN</span></td><td class="mono">11-12 09:32</td>
+              <td><div class="row-actions"><button class="btn btn-sm btn-primary" type="button">关闭</button><button class="btn btn-sm" type="button">详情</button></div></td>
+            </tr>
+            <tr>
+              <td class="mono">EV-1041</td><td class="mono">LOGIN_FAIL_LOCK</td><td>账号 erin05 · 5 次错误</td>
+              <td><span class="badge badge-err"><i class="dot"></i>OPEN</span></td><td class="mono">11-12 08:47</td>
+              <td><div class="row-actions"><button class="btn btn-sm btn-primary" type="button">关闭</button><button class="btn btn-sm" type="button">详情</button></div></td>
+            </tr>
+            <tr>
+              <td class="mono">EV-1040</td><td class="mono">REDIRECT_MISMATCH</td><td>客户端 app-b · 回调地址</td>
+              <td><span class="badge badge-warn"><i class="dot"></i>PROCESSING</span></td><td class="mono">11-11 21:10</td>
+              <td><div class="row-actions"><button class="btn btn-sm" type="button">详情</button></div></td>
+            </tr>
+            <tr>
+              <td class="mono">EV-1038</td><td class="mono">DB_TIMEOUT</td><td>认证中心 · 内省端点</td>
+              <td><span class="badge badge-muted">CLOSED</span></td><td class="mono">11-10 14:05</td>
+              <td><div class="row-actions"><button class="btn btn-sm" type="button">详情</button></div></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="pager">
+          <span class="c4 f12">关闭原因示例：已加入黑名单 / 已人工核实为误报</span>
+          <span class="spacer"></span>
+          <span class="page">上一页</span><span class="page active">1</span><span class="page">下一页</span>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

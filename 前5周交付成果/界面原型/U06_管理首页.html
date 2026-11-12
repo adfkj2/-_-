@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1200, initial-scale=1">
+  <title>U06 管理首页</title>
+  <link rel="stylesheet" href="_shared.css">
+  <style>
+    .grid2 { display: flex; gap: 12px; }
+    .grid2 > .col-a { flex: 0 0 560px; display: flex; flex-direction: column; gap: 12px; }
+    .grid2 > .col-b { flex: 1; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+    .chart { display: flex; align-items: stretch; gap: 10px; height: 92px; padding: 0 4px; }
+    .chart .col { flex: 1; height: 100%; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .chart .track { flex: 1; width: 100%; display: flex; align-items: flex-end; justify-content: center; }
+    .chart .bar { display: block; width: 100%; max-width: 34px; background: var(--brand); border-radius: 3px 3px 0 0; opacity: .85; }
+    .chart .bar.low { background: #93b4ea; }
+    .chart .lb { font-size: 10.5px; color: var(--ink-4); }
+    .list-row {
+      display: flex; align-items: center; gap: 10px; padding: 8px 14px;
+      border-bottom: 1px solid #f1f2f4; font-size: 12.5px;
+    }
+    .list-row:last-child { border-bottom: 0; }
+    .list-row .dot2 { width: 6px; height: 6px; border-radius: 50%; flex: 0 0 6px; }
+    .list-row .t { color: var(--ink-4); font-size: 11.5px; margin-left: auto; white-space: nowrap; }
+    .quick { display: flex; gap: 8px; padding: 12px 14px; }
+    .quick .btn { flex: 1; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="mark">SC</span>统一身份认证中心<span style="font-weight:400;color:#9fb0c9;font-size:13px;">管理控制台</span></div>
+    <span class="spacer"></span>
+    <span class="meta">当前账号 <b>admin</b> · ADMIN</span>
+    <span class="divider"></span>
+    <span class="meta">2026-11-12 09:41</span>
+    <span class="divider"></span>
+    <a href="#">退出管理端</a>
+  </header>
+
+  <div class="shell">
+    <nav class="sidebar">
+      <div class="group">运维</div>
+      <div class="nav-item active"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.2"/><rect x="14" y="3" width="7" height="7" rx="1.2"/><rect x="3" y="14" width="7" height="7" rx="1.2"/><rect x="14" y="14" width="7" height="7" rx="1.2"/></svg>管理首页</div>
+      <div class="nav-item"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><path d="M16.5 8.6a3 3 0 0 1 0 5.6"/><path d="M18.4 20c0-2.3-.8-4-2.1-5"/></svg>用户与角色</div>
+      <div class="nav-item"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="5" rx="1.5"/><rect x="13" y="10" width="8" height="11" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/></svg>应用与授权</div>
+      <div class="group">治理</div>
+      <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M4 5h9M4 10h16M4 15h16M4 20h9"/></svg>审计与统计</div>
+      <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.4-3 8.2-7 9-4-.8-7-4.6-7-9V6l7-3z"/></svg>策略与异常</div>
+      <div class="group">账号</div>
+      <div class="nav-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="10" r="2.6"/><path d="M7.6 18.4c1-2.2 2.6-3.3 4.4-3.3s3.4 1.1 4.4 3.3"/></svg>我的个人中心</div>
+      <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M14 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8"/><path d="M17 8l4 4-4 4"/><path d="M21 12H10"/></svg>统一退出</div>
+    </nav>
+
+    <main class="content">
+      <div class="page-head">
+        <div>
+          <h1>管理首页</h1>
+          <p class="desc">昨日至今日 09:41 的认证概况；待审核与异常事件需当日处理。</p>
+        </div>
+        <div class="actions">
+          <button class="btn" type="button">刷新数据</button>
+          <button class="btn btn-primary" type="button">去处理待办</button>
+        </div>
+      </div>
+
+      <div class="metrics">
+        <div class="metric warn">
+          <div class="label">待审核账号</div>
+          <div class="value">6<span class="unit">个</span></div>
+          <div class="foot">最早提交于 11-10 14:20</div>
+        </div>
+        <div class="metric brand">
+          <div class="label">开放异常事件</div>
+          <div class="value">3<span class="unit">条</span></div>
+          <div class="foot">含 1 条匿名注册过频</div>
+        </div>
+        <div class="metric ok">
+          <div class="label">今日认证成功</div>
+          <div class="value">128<span class="unit">次</span></div>
+          <div class="foot">涉及 46 个账号 · 2 个应用</div>
+        </div>
+        <div class="metric">
+          <div class="label">今日认证失败</div>
+          <div class="value">9<span class="unit">次</span></div>
+          <div class="foot">3 个账号触发失败计数</div>
+        </div>
+      </div>
+
+      <div class="grid2">
+        <div class="col-a">
+          <section class="panel">
+            <div class="panel-head">待审核账号<span class="sub">按提交时间升序</span>
+              <span class="right"><button class="btn btn-sm" type="button">进入用户管理</button></span>
+            </div>
+            <table class="tbl">
+              <thead>
+                <tr><th>用户名</th><th>显示名</th><th>提交时间</th><th>操作</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="strong">bob02</td><td>王博</td><td class="mono">2026-11-10 14:20</td>
+                    <td><div class="row-actions"><button class="btn btn-sm btn-primary" type="button">审核</button></div></td></tr>
+                <tr><td class="strong">grace07</td><td>孙格蕾</td><td class="mono">2026-11-11 09:05</td>
+                    <td><div class="row-actions"><button class="btn btn-sm btn-primary" type="button">审核</button></div></td></tr>
+                <tr><td class="strong">judy10</td><td>郑朱迪</td><td class="mono">2026-11-11 16:48</td>
+                    <td><div class="row-actions"><button class="btn btn-sm btn-primary" type="button">审核</button></div></td></tr>
+                <tr><td class="strong">ken11</td><td>黄肯</td><td class="mono">2026-11-12 08:31</td>
+                    <td><div class="row-actions"><button class="btn btn-sm btn-primary" type="button">审核</button></div></td></tr>
+              </tbody>
+            </table>
+            <div class="pager"><span>另有 2 条待审核记录</span><span class="spacer"></span><span class="page">查看全部</span></div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">近 7 日认证成功次数<span class="sub">单位：次</span>
+              <span class="right f12 c4">峰值 163 · 均值 132</span>
+            </div>
+            <div class="panel-body" style="padding: 10px 14px 8px;">
+              <div class="chart">
+                <div class="col"><div class="track"><span class="bar low" style="height:44%"></span></div><span class="lb">11-06</span></div>
+                <div class="col"><div class="track"><span class="bar low" style="height:52%"></span></div><span class="lb">11-07</span></div>
+                <div class="col"><div class="track"><span class="bar low" style="height:38%"></span></div><span class="lb">11-08</span></div>
+                <div class="col"><div class="track"><span class="bar" style="height:71%"></span></div><span class="lb">11-09</span></div>
+                <div class="col"><div class="track"><span class="bar" style="height:86%"></span></div><span class="lb">11-10</span></div>
+                <div class="col"><div class="track"><span class="bar" style="height:100%"></span></div><span class="lb">11-11</span></div>
+                <div class="col"><div class="track"><span class="bar" style="height:78%"></span></div><span class="lb">11-12</span></div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="col-b">
+          <section class="panel">
+            <div class="panel-head">开放异常事件<span class="sub">未关闭 3 条</span></div>
+            <div class="list-row">
+              <span class="dot2" style="background:#dc2626"></span>
+              <div><b>10.21.9.77</b> 匿名注册尝试过频<br><span class="c4 f12">AUTH_RATE_LIMIT · 已触发 429</span></div>
+              <span class="t">09:32</span>
+            </div>
+            <div class="list-row">
+              <span class="dot2" style="background:#d97706"></span>
+              <div><b>erin05</b> 连续 5 次口令错误<br><span class="c4 f12">LOGIN_FAIL_LOCK · 账号已锁定</span></div>
+              <span class="t">08:47</span>
+            </div>
+            <div class="list-row">
+              <span class="dot2" style="background:#d97706"></span>
+              <div><b>app-b</b> 回调地址校验失败<br><span class="c4 f12">REDIRECT_MISMATCH · 已拒绝授权</span></div>
+              <span class="t">昨天 21:10</span>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">近期认证摘要<span class="sub">实时</span>
+              <span class="right"><button class="btn btn-sm btn-ghost" type="button">查看审计</button></span>
+            </div>
+            <div class="list-row">
+              <span class="dot2" style="background:#16a34a"></span>
+              <div><b>alice01</b> 通过统一认证登录 app-a</div>
+              <span class="t">09:12</span>
+            </div>
+            <div class="list-row">
+              <span class="dot2" style="background:#16a34a"></span>
+              <div><b>carol03</b> 通过统一认证登录 app-b</div>
+              <span class="t">09:03</span>
+            </div>
+            <div class="list-row">
+              <span class="dot2" style="background:#1d4ed8"></span>
+              <div><b>admin</b> 审核通过账号 <b>ken11</b></div>
+              <span class="t">08:58</span>
+            </div>
+            <div class="list-row">
+              <span class="dot2" style="background:#b91c1c"></span>
+              <div><b>erin05</b> 登录失败（第 5 次）</div>
+              <span class="t">08:47</span>
+            </div>
+            <div class="list-row">
+              <span class="dot2" style="background:#16a34a"></span>
+              <div><b>frank06</b> 统一退出，撤销 1 个授权</div>
+              <span class="t">08:20</span>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

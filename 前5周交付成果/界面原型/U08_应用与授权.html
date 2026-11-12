@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1200, initial-scale=1">
+  <title>U08 应用与授权</title>
+  <link rel="stylesheet" href="_shared.css">
+  <style>
+    .grid2 { display: flex; gap: 12px; }
+    .grid2 > .col-a { flex: 0 0 330px; }
+    .grid2 > .col-b { flex: 1; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+    .client { padding: 10px 14px; border-bottom: 1px solid #f1f2f4; }
+    .client:last-child { border-bottom: 0; }
+    .client.sel { background: var(--brand-soft); border-left: 3px solid var(--brand); padding-left: 11px; }
+    .client .nm { font-size: 13.5px; font-weight: 600; }
+    .kv2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; padding: 4px 14px 6px; }
+    .kv2 .kv { border-bottom: 1px dashed var(--line); }
+    .kv2 .kv .k { flex: 0 0 74px; }
+    .chk { width: 14px; height: 14px; border: 1px solid var(--line-strong); border-radius: 3px; display: inline-block; }
+    .chk.on { background: var(--brand); border-color: var(--brand); position: relative; }
+    .chk.on::after { content: ""; position: absolute; left: 4px; top: 1px; width: 4px; height: 8px;
+                     border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+    .verify-ok { color: var(--ok-fg); font-size: 11.5px; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="mark">SC</span>统一身份认证中心<span style="font-weight:400;color:#9fb0c9;font-size:13px;">管理控制台</span></div>
+    <span class="spacer"></span>
+    <span class="meta">当前账号 <b>admin</b> · ADMIN</span>
+    <span class="divider"></span>
+    <span class="meta">2026-11-12 09:41</span>
+    <span class="divider"></span>
+    <a href="#">退出管理端</a>
+  </header>
+
+  <div class="shell">
+    <nav class="sidebar">
+      <div class="group">运维</div>
+      <div class="nav-item"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.2"/><rect x="14" y="3" width="7" height="7" rx="1.2"/><rect x="3" y="14" width="7" height="7" rx="1.2"/><rect x="14" y="14" width="7" height="7" rx="1.2"/></svg>管理首页</div>
+      <div class="nav-item"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><path d="M16.5 8.6a3 3 0 0 1 0 5.6"/><path d="M18.4 20c0-2.3-.8-4-2.1-5"/></svg>用户与角色</div>
+      <div class="nav-item active"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="5" rx="1.5"/><rect x="13" y="10" width="8" height="11" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/></svg>应用与授权</div>
+      <div class="group">治理</div>
+      <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M4 5h9M4 10h16M4 15h16M4 20h9"/></svg>审计与统计</div>
+      <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.4-3 8.2-7 9-4-.8-7-4.6-7-9V6l7-3z"/></svg>策略与异常</div>
+      <div class="group">账号</div>
+      <div class="nav-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="10" r="2.6"/><path d="M7.6 18.4c1-2.2 2.6-3.3 4.4-3.3s3.4 1.1 4.4 3.3"/></svg>我的个人中心</div>
+      <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M14 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8"/><path d="M17 8l4 4-4 4"/><path d="M21 12H10"/></svg>统一退出</div>
+    </nav>
+
+    <main class="content">
+      <div class="page-head">
+        <div>
+          <h1>应用与授权</h1>
+          <p class="desc">注册客户端、维护回调地址与角色授权关系；状态与授权变更在下一次访问时生效。</p>
+        </div>
+        <div class="actions">
+          <button class="btn" type="button">校验全部回调</button>
+          <button class="btn btn-primary" type="button">新建客户端</button>
+        </div>
+      </div>
+
+      <div class="grid2">
+        <div class="col-a">
+          <section class="panel">
+            <div class="panel-head">已注册客户端<span class="sub">共 3 个</span></div>
+            <div class="client sel">
+              <div class="row"><span class="nm">教务信息服务 A</span><span class="badge badge-ok right"><i class="dot"></i>启用</span></div>
+              <div class="mono f12 c3">app-a · 机密客户端 · 2 个回调地址</div>
+            </div>
+            <div class="client">
+              <div class="row"><span class="nm">教务信息服务 B</span><span class="badge badge-ok right"><i class="dot"></i>启用</span></div>
+              <div class="mono f12 c3">app-b · 机密客户端 · 2 个回调地址</div>
+            </div>
+            <div class="client">
+              <div class="row"><span class="nm">图书馆借阅查询</span><span class="badge badge-muted right">停用</span></div>
+              <div class="mono f12 c3">app-lib · 公开客户端 · 未授权角色</div>
+            </div>
+            <div class="pager"><span>停用客户端不参与授权判定</span><span class="spacer"></span><span class="page">3 / 3</span></div>
+          </section>
+
+          <section class="panel" style="margin-top: 12px;">
+            <div class="panel-head">接入流程<span class="sub">4 步</span></div>
+            <div style="padding: 9px 14px 11px; font-size: 12px; color: var(--ink-3); line-height: 1.9;">
+              1. 新建客户端，记录 <span class="mono">client_id</span> 与密钥<br>
+              2. 登记精确回调地址，生产环境只接受 HTTPS<br>
+              3. 为角色授予可见范围，撤销即时生效<br>
+              4. 上线前用「校验全部回调」确认可达
+            </div>
+          </section>
+
+          <div class="alert alert-warn" style="margin-top: 12px; margin-bottom: 0;">
+            <span class="ico">!</span>
+            <div>localhost 回调仅用于演示环境；生产配置禁止明文 HTTP 回调，校验失败将拒绝授权。</div>
+          </div>
+        </div>
+
+        <div class="col-b">
+          <section class="panel">
+            <div class="panel-head">客户端信息<span class="sub">app-a</span>
+              <span class="right"><span class="badge badge-ok"><i class="dot"></i>ACTIVE</span></span>
+            </div>
+            <div class="kv2">
+              <div class="kv"><span class="k">client_id</span><span class="v mono">app-a</span></div>
+              <div class="kv"><span class="k">名称</span><span class="v">教务信息服务 A</span></div>
+              <div class="kv"><span class="k">类型</span><span class="v">机密客户端</span></div>
+              <div class="kv"><span class="k">授权模式</span><span class="v">授权码 + PKCE</span></div>
+              <div class="kv"><span class="k">访问令牌</span><span class="v">15 分钟</span></div>
+              <div class="kv"><span class="k">刷新令牌</span><span class="v">8 小时 · 轮换</span></div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">回调地址<span class="sub">必须精确匹配</span>
+              <span class="right"><button class="btn btn-sm" type="button">新增地址</button></span>
+            </div>
+            <table class="tbl">
+              <thead><tr><th>回调地址</th><th style="width:130px;">校验结果</th><th style="width:96px;">操作</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td class="mono">https://a.scu.edu.cn/login/oauth2/code/sso</td>
+                  <td><span class="verify-ok">HTTPS · 已校验</span></td>
+                  <td><button class="btn btn-sm" type="button">移除</button></td>
+                </tr>
+                <tr>
+                  <td class="mono">http://localhost:8081/login/oauth2/code/sso</td>
+                  <td><span class="badge badge-warn">仅演示环境</span></td>
+                  <td><button class="btn btn-sm" type="button">移除</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">角色授权<span class="sub">勾选后该角色可登录本应用</span></div>
+            <table class="tbl">
+              <thead><tr><th style="width:60px;">授权</th><th>角色</th><th style="width:160px;">可见范围</th><th style="width:120px;">在册账号</th></tr></thead>
+              <tbody>
+                <tr><td><span class="chk on"></span></td><td class="strong">TEACHER</td><td>教师工作台</td><td>42</td></tr>
+                <tr><td><span class="chk on"></span></td><td class="strong">STUDENT</td><td>学生选课与成绩</td><td>86</td></tr>
+                <tr><td><span class="chk"></span></td><td class="strong">ADMIN</td><td>管理端入口</td><td>0</td></tr>
+              </tbody>
+            </table>
+            <div class="pager">
+              <span class="c4 f12">取消授权后，该角色用户的下一请求即返回 403</span>
+              <span class="spacer"></span>
+              <button class="btn btn-sm" type="button">重置</button>
+              <button class="btn btn-sm btn-primary" type="button">保存授权</button>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

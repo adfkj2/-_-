@@ -28,3 +28,6 @@ SE-课程设计要求-2026.pptx
 Thumbs.db
 *.log
 .workbuddy/
+
+# AI assistant workspace data
+.codebuddy/
