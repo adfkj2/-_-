@@ -45,7 +45,7 @@ import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 
 /**
  * OAuth2 授权服务器配置：授权码 + PKCE S256，令牌有效期 10 分钟，不签发刷新令牌。
- * 客户端在演示环境按公共客户端处理（无共享密钥），接入管理属于 F13，暂用内存仓库。
+ * 客户端按机密客户端登记（client_secret_basic，密钥散列保存），接入管理属于 F13，暂用内存仓库。
  */
 @Configuration
 public class AuthorizationServerConfig {

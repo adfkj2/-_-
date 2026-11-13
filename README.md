@@ -46,7 +46,7 @@ UML 模型位于 `前5周交付成果/UML模型/`，每张图提供 PlantUML 源
    ├─ app-a :8081 (SESSION_A) ─────┤  OIDC 授权码 + PKCE S256
    └─ app-b :8082 (SESSION_B) ─────┘  / 令牌内省 / 统一退出
                     │
-            认证中心 :9000 ── MySQL 8.4
+            认证中心 :8080 ── MySQL 8.4
 ```
 
 | 需求 | 能力 | 代码位置 |
@@ -96,7 +96,7 @@ java -jar app-b/target/app-b-0.1.0.jar
 
 ## 关键约定
 
-- **端口**：认证中心 9000，应用 A 8081，应用 B 8082。
+- **端口**：认证中心 8080，应用 A 8081，应用 B 8082。
 - **Cookie 名**：`SESSION_CENTER`、`SESSION_A`、`SESSION_B`。浏览器 Cookie 不按端口隔离，三个服务必须使用不同名称，否则无法演示单点登录。
 - **客户端**：两个业务系统按机密客户端登记（`client_secret_basic` + 强制 PKCE S256），密钥以散列保存，用 `SSO_APP_A_SECRET` 与 `SSO_APP_B_SECRET` 覆盖。
 - **令牌**：授权码 60 秒一次性、访问令牌 10 分钟、不签发刷新令牌。
