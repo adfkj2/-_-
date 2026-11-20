@@ -1,27 +1,32 @@
 @startuml
 !pragma layout smetana
 skinparam defaultFontName Microsoft YaHei
-skinparam defaultFontSize 15
+skinparam defaultFontSize 14
 skinparam dpi 180
 skinparam shadowing false
 skinparam backgroundColor white
 skinparam ArrowColor #456278
 skinparam classBackgroundColor #F3F6FA
-skinparam componentBackgroundColor #F3F6FA
-skinparam packageBackgroundColor white
+skinparam classBorderColor #7C93A8
+skinparam nodesep 18
+skinparam ranksep 28
 hide empty members
 top to bottom direction
-class "sys_user\n用户" as U
-class "sys_role\n角色" as R
-class "user_role\n用户角色关联" as UR
-class "role_application\n角色应用授权" as RA
-class "app_profile\n应用扩展信息" as P
-class "oauth2_registered_client\n协议客户端" as C
-class "auth_session\n中心会话" as S
-class "authorization_session_link\n授权会话关联" as L
-class "oauth2_authorization\n框架授权" as A
-class "audit_event\n审计事件" as E
-class "security_event\n异常事件" as X
+
+class "1  sys_user\n用户表" as U
+class "2  sys_role\n角色表" as R
+class "3  user_role\n用户角色关联表" as UR
+class "4  role_application\n角色应用授权表" as RA
+class "5  app_profile\n应用扩展表" as P
+class "6  auth_session\n中心会话表" as S
+class "7  authorization_session_link\n授权会话关联表" as L
+class "8  security_policy\n安全策略表（单例）" as SP
+class "9  audit_event\n审计事件表" as E
+class "10  security_event\n异常事件表" as X
+class "11  oauth2_registered_client\n协议客户端表" as C
+class "12  oauth2_authorization\n框架授权表" as A
+class "13  oauth2_authorization_consent\n用户同意记录表" as N
+
 U "1" -- "0..*" UR
 R "1" -- "0..*" UR
 R "1" -- "0..*" RA
@@ -31,10 +36,17 @@ U "1" -- "0..*" S
 S "1" -- "0..*" L
 A "1" -- "0..1" L
 C "1" -- "0..*" A
-U "0..1" -- "0..*" E
-E "1" -- "0..1" X
-note bottom of A
-框架表与自定义表分开维护
-会话关联由扩展服务保证一致性
+C "1" -- "0..*" N
+U "1" -- "0..1" SP : 维护人
+U "0..1" -- "0..*" E : 操作者或目标
+P "0..1" -- "0..*" E : 关联应用
+E "1" -- "0..1" X : 来源事件
+U "0..1" -- "0..*" X : 处理人
+U "0..1" -- "0..*" U : 审核人
+
+note bottom of X
+数据库关系图（ER 图），用 UML 类图记法表示实体与基数。
+共 13 个实体，与表 5-1「数据表清单」13 行编号一一对应：
+业务表 10 张（1—10），OIDC 框架表 3 张（11—13）。
 end note
 @enduml
